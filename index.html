@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TAC-SYNC overlay test</title>
+<style>
+  body{margin:0;background:#0d1117;color:#e6edf3;font:16px/1.45 system-ui,sans-serif}
+  main{max-width:520px;margin:0 auto;padding:16px}
+  h1{font-size:20px;margin:0 0 4px}
+  h2{font-size:15px;margin:22px 0 6px;color:#9fb0c3}
+  p{margin:0 0 12px;color:#9fb0c3}
+  .box{border:2px solid #2b374a;border-radius:10px;background:#141b27;padding:10px;text-align:center;min-height:84px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box}
+  .box .l{font-size:13px;color:#9fb0c3}
+  .box .t{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
+  .box.run .t{color:#f5b301}
+  .box.warn{border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.6)}
+  .box.warn .t{color:#ff6b6b}
+  .box.go{background:#22c55e;border-color:#22c55e;color:#04210f}
+  .box.go .l{color:#04210f}
+  .row{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+  button{flex:1;min-width:140px;padding:12px;border:0;border-radius:8px;background:#f5b301;color:#1a1300;font-weight:800;font-size:15px}
+  button.alt{background:#2b374a;color:#e6edf3}
+  button:focus-visible{outline:3px solid #7aa7ff;outline-offset:2px}
+  ul{margin:0;padding-left:18px}
+  .ok{color:#4ade80}.no{color:#ff7b72}
+  #clock{margin-top:8px;color:#9fb0c3;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main>
+  <h1>Overlay test</h1>
+  <p>Open this page on each device and try the buttons. Then tell me what happened over your game.</p>
+
+  <div id="box" class="box idle"><div class="l" id="label">Idle</div><div class="t" id="time">--</div></div>
+  <div id="clock"></div>
+
+  <div class="row">
+    <button id="start">Start 15 s countdown</button>
+    <button id="stop" class="alt">Stop</button>
+  </div>
+  <div class="row">
+    <button id="pipDoc">Pop out window (PC)</button>
+    <button id="pipVid">Pop out video (phone)</button>
+  </div>
+  <div class="row">
+    <button id="audio" class="alt">Turn on sound</button>
+    <button id="wake" class="alt">Keep screen awake</button>
+  </div>
+  <div id="msg" aria-live="polite" class="no"></div>
+
+  <h2>What this device supports</h2>
+  <ul id="caps"></ul>
+
+  <h2>What to check</h2>
+  <ul>
+    <li>Does the pop-out stay on top of your game?</li>
+    <li>Does the countdown keep moving while the game is in front?</li>
+    <li>Do you hear the beeps and the voice at 3, 2, 1 and at zero?</li>
+    <li>Does the screen stay on for a full minute?</li>
+    <li>Does the box go green at zero, show Done, then go back to idle?</li>
+  </ul>
+</main>
+
+<video id="vid" muted playsinline style="position:fixed;left:-9999px;width:320px;height:140px"></video>
+<canvas id="cv" width="320" height="140" style="display:none"></canvas>
+
+<script>
+const $ = id => document.getElementById(id);
+const box = $('box'), msg = $('msg');
+let target = null, ctx = null, wake = null, pipWin = null, spoke = {};
+const cv = $('cv'), g = cv.getContext('2d'), vid = $('vid');
+
+/* A Web Worker keeps ticking when the page is in the background. */
+const worker = new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),100)'])));
+worker.onmessage = tick;
+
+function pad(n, l = 2){ return String(n).padStart(l, '0'); }
+function clockText(){
+  const d = new Date();
+  return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + Math.floor(d.getMilliseconds() / 100);
+}
+
+function beep(freq, ms){
+  if (!ctx) return;
+  const o = ctx.createOscillator(), v = ctx.createGain();
+  o.frequency.value = freq; v.gain.value = 0.2;
+  o.connect(v); v.connect(ctx.destination);
+  o.start(); o.stop(ctx.currentTime + ms / 1000);
+}
+function say(text){
+  if (!ctx || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+}
+function alertAt(key, freq, ms, text, vib){
+  if (spoke[key]) return;
+  spoke[key] = true;
+  beep(freq, ms);
+  if (text) say(text);
+  if (vib && navigator.vibrate) navigator.vibrate(vib);
+}
+
+function currentState(){
+  if (target === null) return { cls: 'idle', label: 'Idle', time: clockText().slice(0, 8) };
+  const r = target - Date.now();
+  if (r > 0){
+    const s = Math.ceil(r / 1000);
+    if (s <= 3) alertAt('c' + s, 660, 120, String(s), 60);
+    return { cls: r < 3000 ? 'warn' : 'run', label: 'Send in', time: (r / 1000).toFixed(1) };
+  }
+  if (r > -1500){
+    alertAt('go', 990, 400, 'Send', [150, 60, 150]);
+    return { cls: 'go', label: 'SEND', time: 'GO' };
+  }
+  if (r > -11500) return { cls: 'idle', label: 'Done', time: 'Check troop ratios' };
+  target = null; spoke = {};
+  return { cls: 'idle', label: 'Idle', time: clockText().slice(0, 8) };
+}
+
+const colors = { idle: '#141b27', run: '#141b27', warn: '#2a1215', go: '#22c55e' };
+function draw(s){
+  g.fillStyle = colors[s.cls]; g.fillRect(0, 0, 320, 140);
+  g.strokeStyle = s.cls === 'warn' ? '#ef4444' : s.cls === 'go' ? '#22c55e' : '#2b374a';
+  g.lineWidth = 6; g.strokeRect(3, 3, 314, 134);
+  g.textAlign = 'center';
+  g.fillStyle = s.cls === 'go' ? '#04210f' : '#9fb0c3';
+  g.font = '700 20px system-ui,sans-serif'; g.fillText(s.label, 160, 40);
+  g.fillStyle = s.cls === 'go' ? '#04210f' : s.cls === 'warn' ? '#ff6b6b' : s.cls === 'run' ? '#f5b301' : '#e6edf3';
+  g.font = '800 ' + (s.time.length > 8 ? 26 : 56) + 'px system-ui,sans-serif';
+  g.fillText(s.time, 160, 100);
+}
+
+function tick(){
+  const s = currentState();
+  box.className = 'box ' + s.cls;
+  $('label').textContent = s.label;
+  $('time').textContent = s.time;
+  $('clock').textContent = 'Device clock ' + clockText();
+  draw(s);
+}
+
+$('start').onclick = () => { spoke = {}; target = Date.now() + 15000; msg.textContent = ''; };
+$('stop').onclick = () => { target = null; spoke = {}; };
+
+$('audio').onclick = () => {
+  ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+  ctx.resume();
+  beep(660, 150);
+  say('Sound is on');
+  $('audio').textContent = 'Sound is on';
+};
+
+$('wake').onclick = async () => {
+  if (!('wakeLock' in navigator)){ msg.textContent = 'Keep awake is not supported here.'; return; }
+  try {
+    wake = await navigator.wakeLock.request('screen');
+    $('wake').textContent = 'Screen kept awake';
+    wake.addEventListener('release', () => { $('wake').textContent = 'Keep screen awake'; });
+  } catch (e){ msg.textContent = 'Keep awake was refused: ' + e.message; }
+};
+document.addEventListener('visibilitychange', async () => {
+  if (wake && document.visibilityState === 'visible' && wake.released){
+    try { wake = await navigator.wakeLock.request('screen'); } catch (e) {}
+  }
+});
+
+$('pipDoc').onclick = async () => {
+  if (!('documentPictureInPicture' in window)){ msg.textContent = 'Pop-out window needs Chrome or Edge on a computer. Try the video button.'; return; }
+  try {
+    pipWin = await documentPictureInPicture.requestWindow({ width: 280, height: 130 });
+    const st = pipWin.document.createElement('style');
+    st.textContent = document.querySelector('style').textContent + 'body{padding:6px}';
+    pipWin.document.head.append(st);
+    pipWin.document.body.append(box);
+    pipWin.addEventListener('pagehide', () => { $('clock').before(box); pipWin = null; });
+    msg.textContent = '';
+  } catch (e){ msg.textContent = 'Pop-out was refused: ' + e.message; }
+};
+
+$('pipVid').onclick = async () => {
+  try {
+    tick();
+    if (!vid.srcObject) vid.srcObject = cv.captureStream(10);
+    await vid.play();
+    if (vid.requestPictureInPicture) await vid.requestPictureInPicture();
+    else if (vid.webkitSetPresentationMode) vid.webkitSetPresentationMode('picture-in-picture');
+    else msg.textContent = 'This browser has no video pop-out.';
+  } catch (e){ msg.textContent = 'Video pop-out was refused: ' + e.message; }
+};
+
+const caps = [
+  ['Pop-out window (computer)', 'documentPictureInPicture' in window],
+  ['Video pop-out', !!(vid.requestPictureInPicture || vid.webkitSetPresentationMode)],
+  ['Keep screen awake', 'wakeLock' in navigator],
+  ['Vibration', !!navigator.vibrate],
+  ['Voice', 'speechSynthesis' in window],
+  ['Secure page (https)', window.isSecureContext]
+];
+$('caps').innerHTML = caps.map(c => '<li class="' + (c[1] ? 'ok' : 'no') + '">' + c[0] + ': ' + (c[1] ? 'yes' : 'no') + '</li>').join('');
+tick();
+</script>
+</body>
+</html>
