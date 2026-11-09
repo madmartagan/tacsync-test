@@ -67,7 +67,7 @@
 
 <script>
 const $ = id => document.getElementById(id);
-const box = $('box'), msg = $('msg');
+const box = $('box'), msg = $('msg'), lab = $('label'), tim = $('time'), clk = $('clock');
 let target = null, ctx = null, wake = null, pipWin = null, spoke = {};
 const cv = $('cv'), g = cv.getContext('2d'), vid = $('vid');
 
@@ -134,9 +134,9 @@ function draw(s){
 function tick(){
   const s = currentState();
   box.className = 'box ' + s.cls;
-  $('label').textContent = s.label;
-  $('time').textContent = s.time;
-  $('clock').textContent = 'Device clock ' + clockText();
+  lab.textContent = s.label;
+  tim.textContent = s.time;
+  clk.textContent = 'Device clock ' + clockText();
   draw(s);
 }
 
@@ -178,15 +178,33 @@ $('pipDoc').onclick = async () => {
   } catch (e){ msg.textContent = 'Pop-out was refused: ' + e.message; }
 };
 
-$('pipVid').onclick = async () => {
+/* Start the hidden video early so the pop-out request can run inside the tap itself. */
+function primeVideo(){
   try {
     tick();
     if (!vid.srcObject) vid.srcObject = cv.captureStream(10);
-    await vid.play();
-    if (vid.requestPictureInPicture) await vid.requestPictureInPicture();
-    else if (vid.webkitSetPresentationMode) vid.webkitSetPresentationMode('picture-in-picture');
-    else msg.textContent = 'This browser has no video pop-out.';
-  } catch (e){ msg.textContent = 'Video pop-out was refused: ' + e.message; }
+    vid.play().catch(() => {});
+  } catch (e) {}
+}
+primeVideo();
+document.addEventListener('pointerdown', primeVideo, { once: true });
+
+$('pipVid').onclick = () => {
+  if (vid.paused) primeVideo();
+  try {
+    if (vid.webkitSetPresentationMode && !vid.requestPictureInPicture){
+      vid.webkitSetPresentationMode('picture-in-picture');
+    } else if (vid.requestPictureInPicture){
+      vid.requestPictureInPicture().then(() => { msg.textContent = ''; }).catch(e => {
+        if (vid.webkitSetPresentationMode){
+          try { vid.webkitSetPresentationMode('picture-in-picture'); return; } catch (e2) {}
+        }
+        msg.textContent = 'Video pop-out was refused: ' + e.message + ' Tap the button again.';
+      });
+    } else {
+      msg.textContent = 'This browser has no video pop-out.';
+    }
+  } catch (e){ msg.textContent = 'Video pop-out was refused: ' + e.message + ' Tap the button again.'; }
 };
 
 const caps = [
