@@ -3,221 +3,757 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TAC-SYNC overlay test</title>
+<meta name="theme-color" content="#0d1117">
+<title>TAC-SYNC</title>
 <style>
-  body{margin:0;background:#0d1117;color:#e6edf3;font:16px/1.45 system-ui,sans-serif}
-  main{max-width:520px;margin:0 auto;padding:16px}
-  h1{font-size:20px;margin:0 0 4px}
-  h2{font-size:15px;margin:22px 0 6px;color:#9fb0c3}
-  p{margin:0 0 12px;color:#9fb0c3}
-  .box{border:2px solid #2b374a;border-radius:10px;background:#141b27;padding:10px;text-align:center;min-height:84px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box}
-  .box .l{font-size:13px;color:#9fb0c3}
-  .box .t{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
-  .box.run .t{color:#f5b301}
-  .box.warn{border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.6)}
+  :root{--bg:#0d1117;--pan:#141b27;--bd:#2b374a;--tx:#e6edf3;--mu:#9fb0c3;--am:#f5b301;--gr:#22c55e;--rd:#ef4444}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,sans-serif}
+  main{max-width:480px;margin:0 auto;padding:10px}
+  button{border:0;border-radius:7px;background:var(--am);color:#1a1300;font:800 14px system-ui,sans-serif;padding:9px 12px;min-height:38px}
+  button.alt{background:var(--bd);color:var(--tx)}
+  button.go{background:var(--gr);color:#04210f}
+  button.rd{background:var(--rd);color:#fff}
+  button.mini{min-height:30px;padding:4px 9px;font-size:12px}
+  button:disabled{opacity:.6}
+  button:focus-visible,input:focus-visible{outline:3px solid #7aa7ff;outline-offset:1px}
+  input{background:#0b0f17;border:1px solid #3a4960;border-radius:6px;color:var(--tx);font:700 15px system-ui,sans-serif;padding:7px 8px;width:74px;text-align:center;text-transform:uppercase}
+  input.wide{width:120px}
+  .top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+  .pill{background:var(--pan);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:12px;color:var(--mu);display:inline-flex;gap:5px;align-items:center}
+  .pill input{width:56px;padding:2px 4px;font-size:12px}
+  .live{color:#4ade80}.off{color:#ff7b72}
+  #note{color:#ff7b72;font-size:13px;min-height:0;margin:4px 0}
+  .card{background:var(--pan);border:1px solid var(--bd);border-radius:10px;padding:10px;margin:8px 0}
+  .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}
+  .row.tight{margin:4px 0}
+  .sp{flex:1}
+  .mut{color:var(--mu);font-size:12px}
+  .h{font-size:11px;letter-spacing:.06em;color:var(--mu);margin:12px 0 4px;font-weight:700}
+  .box{position:relative;background:var(--pan);border:2px solid var(--bd);border-radius:10px;padding:8px 10px;text-align:center;min-height:120px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+  .box .l{font-size:13px;color:var(--mu)}
+  .box .t{font-size:38px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+  .box .t.sm{font-size:20px}
+  .box .s{font-size:12px;color:var(--mu);min-height:16px}
+  .box.run .t{color:var(--am)}
+  .box.warn{border-color:var(--rd);box-shadow:0 0 12px rgba(239,68,68,.6)}
   .box.warn .t{color:#ff6b6b}
-  .box.go{background:#22c55e;border-color:#22c55e;color:#04210f}
-  .box.go .l{color:#04210f}
-  .row{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
-  button{flex:1;min-width:140px;padding:12px;border:0;border-radius:8px;background:#f5b301;color:#1a1300;font-weight:800;font-size:15px}
-  button.alt{background:#2b374a;color:#e6edf3}
-  button:focus-visible{outline:3px solid #7aa7ff;outline-offset:2px}
-  ul{margin:0;padding-left:18px}
-  .ok{color:#4ade80}.no{color:#ff7b72}
-  #clock{margin-top:8px;color:#9fb0c3;font-variant-numeric:tabular-nums}
+  .box.go{background:var(--gr);border-color:var(--gr);color:#04210f}
+  .box.go .l,.box.go .s{color:#04210f}
+  .cnt{position:absolute;top:6px;right:8px;background:var(--bd);border-radius:10px;padding:0 8px;font-size:12px;font-weight:800;color:var(--tx)}
+  .ctrl{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:4px}
+  .ctrl button.big{font-size:20px;padding:12px 28px}
+  .err{color:#ff7b72;font-size:12px;width:100%}
+  .tabs{display:flex;gap:6px;margin:6px 0}
+  .tabs button{flex:1;background:var(--bd);color:var(--mu)}
+  .tabs button.on{background:var(--am);color:#1a1300}
+  .lrow,.wcard{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#0f1622;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;margin:5px 0}
+  .lrow .ar button{min-height:26px;padding:2px 8px;margin-right:2px}
+  .sym{font-weight:800;font-size:15px;border-radius:6px;padding:3px 8px;background:var(--bd);color:var(--tx)}
+  .sym.rdy{background:var(--gr);color:#04210f}
+  .ln{display:flex;gap:6px;align-items:center;width:100%;flex-wrap:wrap}
+  .wcard.u{border-color:var(--rd);box-shadow:0 0 10px rgba(239,68,68,.55)}
+  .urg{color:#ff6b6b;font-weight:800;text-shadow:0 0 10px var(--rd)}
+  .tm{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--am)}
+  .adj{display:flex;gap:4px}
+  .adj button,.ln button.s{min-height:30px;padding:3px 8px;font-size:12px;background:var(--bd);color:var(--tx)}
+  .foot{margin-top:14px;text-align:center}
+  .link{background:none;color:var(--mu);text-decoration:underline;font-weight:600}
+  video{width:140px;background:#000;border-radius:6px}
 </style>
 </head>
 <body>
 <main>
-  <h1>Overlay test</h1>
-  <p>Open this page on each device and try the buttons. Then tell me what happened over your game.</p>
-
-  <div id="box" class="box idle"><div class="l" id="label">Idle</div><div class="t" id="time">--</div></div>
-  <div id="clock"></div>
-  <p style="margin-top:10px">Video preview (this is what the phone pop-out shows):</p>
-  <video id="vid" muted playsinline autoplay style="width:240px;height:105px;background:#000;border-radius:6px"></video>
-
-  <div class="row">
-    <button id="start">Start 15 s countdown</button>
-    <button id="stop" class="alt">Stop</button>
+  <div class="top">
+    <span class="pill" id="net">Connecting</span>
+    <label class="pill">Room <input id="room" maxlength="10" aria-label="Room code"></label>
+    <span class="pill" id="sync">clock --</span>
+    <button class="mini alt" id="sound">Sound off</button>
   </div>
-  <div class="row">
-    <button id="pipDoc">Pop out window (PC)</button>
-    <button id="pipVid">Pop out video (phone)</button>
+  <div id="note" role="status"></div>
+
+  <section id="adminSec" hidden></section>
+
+  <div id="boxSlot">
+    <div id="box" class="box idle">
+      <span id="cnt" class="cnt" hidden></span>
+      <div id="lab" class="l"></div>
+      <div id="tim" class="t"></div>
+      <div id="sub" class="s"></div>
+      <div id="ctrl" class="ctrl"></div>
+    </div>
   </div>
+
   <div class="row">
-    <button id="audio" class="alt">Turn on sound</button>
+    <button id="pop">Pop out overlay</button>
     <button id="wake" class="alt">Keep screen awake</button>
   </div>
-  <div id="msg" aria-live="polite" class="no"></div>
 
-  <h2>What this device supports</h2>
-  <ul id="caps"></ul>
+  <section class="card" id="me">
+    <div class="mut" id="meInfo"></div>
+    <div class="row tight">
+      <span class="mut" id="meLbl">March</span><span class="sp"></span>
+      <div class="adj">
+        <button class="alt s mini" data-n="-1">−1</button><button class="alt s mini" data-n="-0.1">−.1</button>
+        <b id="meMar" style="min-width:44px;text-align:center">--</b>
+        <button class="alt s mini" data-n="0.1">+.1</button><button class="alt s mini" data-n="1">+1</button>
+      </div>
+    </div>
+    <button class="alt mini" id="resetMe">↺ Leave and start fresh</button>
+  </section>
 
-  <h2>What to check</h2>
-  <ul>
-    <li>Does the pop-out stay on top of your game?</li>
-    <li>Does the countdown keep moving while the game is in front?</li>
-    <li>Do you hear the beeps and the voice at 3, 2, 1 and at zero?</li>
-    <li>Does the screen stay on for a full minute?</li>
-    <li>Does the box go green at zero, show Done, then go back to idle?</li>
-  </ul>
+  <div class="foot">
+    <button class="link" id="adminBtn">Admin</button>
+    <div class="mut" style="margin-top:8px">Pop-out preview</div>
+    <video id="vid" muted playsinline autoplay></video>
+  </div>
 </main>
+<canvas id="cv" width="640" height="280" style="position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:.01;pointer-events:none"></canvas>
 
-<canvas id="cv" width="320" height="140" style="position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:.01;pointer-events:none"></canvas>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, onSnapshot, updateDoc, setDoc, getDocFromServer, runTransaction, serverTimestamp, deleteField } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDvkWldP_pkALVJJ2m0_1o7h2P4aAW4SM0",
+  authDomain: "tacsync-466ab.firebaseapp.com",
+  projectId: "tacsync-466ab",
+  storageBucket: "tacsync-466ab.firebasestorage.app",
+  messagingSenderId: "589173582236",
+  appId: "1:589173582236:web:d46ab78f84efab569c4059"
+};
+/* CHANGE THIS before you share the link. */
+const ADMIN_PASSWORD = 'CHANGE-ME';
+
+//#PURE-START
+function parseMS(t){
+  t = String(t == null ? '' : t).trim();
+  if (!t) return null;
+  if (t.includes(':')){
+    const p = t.split(':'), m = parseInt(p[0] || '0', 10), s = parseInt(p[1] || '0', 10);
+    if (isNaN(m) || isNaN(s)) return null;
+    return m * 60 + s;
+  }
+  const d = t.replace(/\D/g, '');
+  if (!d) return null;
+  if (d.length <= 2) return parseInt(d, 10);
+  return parseInt(d.slice(0, -2), 10) * 60 + parseInt(d.slice(-2), 10);
+}
+function fmtMS(sec){
+  if (sec == null || isNaN(sec)) return '--';
+  const t = Math.round(sec * 10) / 10, m = Math.floor(t / 60), s = Math.round((t - m * 60) * 10) / 10;
+  return m + ':' + (s < 10 ? '0' : '') + (s % 1 ? s.toFixed(1) : String(s));
+}
+function fmtCount(ms){
+  if (ms < 0) ms = 0;
+  const s = ms / 1000;
+  if (s >= 60){ const m = Math.floor(s / 60), r = s - m * 60; return m + ':' + (r < 10 ? '0' : '') + r.toFixed(1); }
+  return s.toFixed(1);
+}
+function defaultOffsets(n){
+  const o = [];
+  for (let i = 0; i < n; i++){
+    if (i < n - 1) o.push(Math.round(i * 10) / 100 * 1);
+    else o.push(n === 1 ? 0 : Math.round(((n - 2) * 0.1 + 0.4) * 10) / 10);
+  }
+  return o.map(x => Math.round(x * 10) / 10);
+}
+function buildPlan(leaders, bufferSec, startMs){
+  let need = -Infinity;
+  leaders.forEach(l => { need = Math.max(need, l.march - l.off); });
+  const baseHit = startMs + bufferSec * 1000 + need * 1000;
+  const hit = {}, launch = {};
+  leaders.forEach(l => { hit[l.uid] = Math.round(baseHit + l.off * 1000); launch[l.uid] = hit[l.uid] - Math.round(l.march * 1000); });
+  return { baseHit: Math.round(baseHit), hit, launch };
+}
+function waveInfo(waves){
+  const s = [...waves].sort((a, b) => a.landAt - b.landAt);
+  return s.map((w, i) => {
+    const gap = i ? (w.landAt - s[i - 1].landAt) / 1000 : null;
+    return Object.assign({}, w, { label: 'A' + (i + 1), gap: gap, urgent: gap !== null && gap <= 1.0 });
+  });
+}
+function launchList(waves, march){
+  return waveInfo(waves).map(w => ({ id: w.id, label: w.label, name: w.name, landAt: w.landAt, gap: w.gap, urgent: w.urgent,
+    L: w.landAt + (w.off == null ? 0.4 : w.off) * 1000 - march * 1000 })).sort((a, b) => a.L - b.L);
+}
+function defState(list, t){
+  for (let i = 0; i < list.length; i++){
+    const nextL = list[i + 1] ? list[i + 1].L - list[i].L : 1500;
+    const end = list[i].L + Math.min(1500, Math.max(0, nextL));
+    if (t < end){
+      const it = list[i];
+      return { kind: t >= it.L ? 'send' : 'count', i: i, rem: it.L - t, left: list.length - i, item: it,
+        nextGap: list[i + 1] ? (list[i + 1].L - it.L) / 1000 : null };
+    }
+  }
+  const last = list[list.length - 1];
+  if (last && t < last.L + 1500 + 10000) return { kind: 'done' };
+  return { kind: 'idle' };
+}
+//#PURE-END
+
 const $ = id => document.getElementById(id);
-const box = $('box'), msg = $('msg'), lab = $('label'), tim = $('time'), clk = $('clock');
-let target = null, ctx = null, wake = null, pipWin = null, spoke = {};
-const cv = $('cv'), g = cv.getContext('2d'), vid = $('vid');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const box = $('box'), lab = $('lab'), tim = $('tim'), sub = $('sub'), ctrl = $('ctrl'), cntEl = $('cnt');
+const adminSec = $('adminSec');
 
-/* A Web Worker keeps ticking when the page is in the background. */
+/* ---------- local profile ---------- */
+let prof = { role: null, sym: '', march: null, dmarch: null };
+try { Object.assign(prof, JSON.parse(localStorage.getItem('tacsync_prof') || '{}')); } catch (e) {}
+const saveProf = () => { try { localStorage.setItem('tacsync_prof', JSON.stringify(prof)); } catch (e) {} };
+let roomKey = 'R' + ((localStorage.getItem('tacsync_room') || '261').replace(/[^A-Za-z0-9_-]/g, '').toUpperCase() || '261');
+$('room').value = roomKey.slice(1);
+
+/* ---------- state ---------- */
+let app, auth, db, uid = null, D = null, unsub = null, live = false;
+let offset = 0, rttMs = null;
+let isAdmin = false, hbTimer = null, starting = false;
+let lastMode = null, modeBannerUntil = 0, lastKey = null;
+const ui = { editing: false, pendingRally: null, editD: false };
+const bar = { phase: 'rally', editId: null };
+let soundOn = false, actx = null; const fired = new Set();
+const now = () => Date.now() + offset;
+const roomRef = () => doc(db, 'rooms', roomKey);
+
+function note(msg, keep){ $('note').textContent = msg || ''; if (msg && !keep) setTimeout(() => { if ($('note').textContent === msg) $('note').textContent = ''; }, 6000); }
+function fail(e){
+  const c = (e && e.code) || '';
+  if (c.includes('permission')) note('Firestore blocked the request. Check the security rules.', true);
+  else if (c.includes('operation-not-allowed') || c.includes('admin-restricted')) note('Turn on Anonymous sign-in in Firebase Authentication.', true);
+  else note('Error: ' + (e && e.message ? e.message : e), true);
+}
+const upd = obj => updateDoc(roomRef(), obj).catch(fail);
+
+/* ---------- doc helpers ---------- */
+function initialDoc(){
+  return { mode: 'attack', modeAt: 0, admin: null, players: {},
+    attack: { stage: 'lobby', confirmed: false, order: [], off: {}, buffer: 10, cdEnd: 0, plan: null, epoch: 0 },
+    def: { enemies: [], waves: [] } };
+}
+async function ensureRoom(){
+  const r = roomRef();
+  await runTransaction(db, async tx => { const s = await tx.get(r); if (!s.exists()) tx.set(r, initialDoc()); });
+}
+function epoch(){ return (D && D.attack && D.attack.epoch) || 0; }
+function leadersNow(){
+  const ep = epoch(), P = (D && D.players) || {};
+  const all = Object.keys(P).filter(u => P[u] && P[u].role === 'lead' && P[u].ep === ep && P[u].sym)
+    .map(u => Object.assign({ uid: u }, P[u]));
+  const ord = (D.attack.order || []);
+  all.sort((a, b) => {
+    const ia = ord.indexOf(a.uid), ib = ord.indexOf(b.uid);
+    if (ia >= 0 && ib >= 0) return ia - ib;
+    if (ia >= 0) return -1;
+    if (ib >= 0) return 1;
+    return (a.t || 0) - (b.t || 0);
+  });
+  return all;
+}
+function joinersNow(){
+  const ep = epoch(), P = D.players || {};
+  return Object.keys(P).filter(u => P[u] && P[u].role === 'join' && P[u].ep === ep && P[u].rally).map(u => Object.assign({ uid: u }, P[u]));
+}
+function offsetsFor(L){
+  const d = defaultOffsets(L.length), o = D.attack.off || {};
+  return L.map((l, i) => (o[l.uid] != null ? o[l.uid] : d[i]));
+}
+
+/* ---------- clock sync ---------- */
+async function syncClock(){
+  if (!db || !uid) return;
+  const r = doc(db, 'clocks', uid); let best = null;
+  for (let i = 0; i < 5; i++){
+    try {
+      const t0 = Date.now(); await setDoc(r, { t: serverTimestamp() }); const t1 = Date.now();
+      const s = await getDocFromServer(r), st = s.data() && s.data().t && s.data().t.toMillis();
+      if (!st) continue;
+      const rtt = t1 - t0;
+      if (!best || rtt < best.rtt) best = { rtt: rtt, off: st - (t0 + t1) / 2 };
+    } catch (e) { return; }
+  }
+  if (best){ offset = rttMs == null ? best.off : offset * 0.5 + best.off * 0.5; rttMs = best.rtt; }
+}
+
+/* ---------- audio ---------- */
+function beep(f, ms){
+  if (!soundOn || !actx) return;
+  const o = actx.createOscillator(), v = actx.createGain();
+  o.frequency.value = f; v.gain.value = 0.2; o.connect(v); v.connect(actx.destination);
+  o.start(); o.stop(actx.currentTime + ms / 1000);
+}
+function say(t){ if (soundOn && 'speechSynthesis' in window){ speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(t)); } }
+function cue(key, f, ms, text, vib){
+  if (fired.has(key)) return; fired.add(key);
+  beep(f, ms); if (text) say(text);
+  if (navigator.vibrate) navigator.vibrate(vib);
+}
+$('sound').onclick = () => {
+  actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume();
+  soundOn = true; beep(660, 150); say('Sound is on'); $('sound').textContent = 'Sound on';
+};
+
+/* ---------- views ---------- */
+const V = (key, o) => Object.assign({ key: key, cls: 'idle', label: '', time: '', sub: '', ctrl: '', cnt: null, rem: null, go: false, cid: key }, o);
+const btn = (act, txt, cls, extra) => '<button class="' + (cls || '') + '" data-act="' + act + '" ' + (extra || '') + '>' + txt + '</button>';
+
+function marchInput(v){ return '<input id="inMar" class="wide" inputmode="numeric" placeholder="0:45" value="' + (v == null ? '' : fmtMS(v)) + '" aria-label="March time">'; }
+
+function attackView(t){
+  const A = D.attack, ep = epoch(), me = (D.players || {})[uid], reg = me && me.ep === ep;
+  if (!prof.role) return V('role', { label: 'Choose your role', ctrl: btn('role-lead', 'LEAD') + btn('role-join', 'JOIN', 'alt') });
+  const plan = A.plan;
+  if (prof.role === 'lead'){
+    if (!reg || ui.editing)
+      return V('lead-entry:' + ep + ui.editing, { label: 'Rally lead · symbol + march', ctrl:
+        '<input id="inSym" maxlength="2" autocapitalize="characters" placeholder="VX" value="' + esc(prof.sym || '') + '" aria-label="2 letter symbol">' +
+        marchInput(prof.march) + btn('lead-ok', 'OK') + btn('role-back', '◂', 'alt') + '<span class="err" id="inErr"></span>' });
+    const me1 = esc(prof.sym) + ' ' + fmtMS(prof.march);
+    if (A.stage === 'lobby')
+      return V('lead-wait:' + A.confirmed, { cls: 'idle', label: A.confirmed ? 'Standing by' : 'Waiting for admin', time: A.confirmed ? 'STANDBY' : 'WAIT', sub: me1,
+        ctrl: btn('lead-edit', '◂ edit', 'alt') });
+    if (A.stage === 'ready'){
+      if (!me.ready) return V('lead-ready', { label: 'Ready check', ctrl: btn('ready', 'READY', 'go big') });
+      return V('lead-ready-done', { label: 'READY ✓', time: 'WAIT', sub: 'waiting for the others' });
+    }
+    if (A.stage === 'countdown'){
+      if (!plan || plan.hit[uid] == null) return V('lead-late', { label: 'Not in this op', time: 'MISSED', sub: 'wait for the next one' });
+      if (t < A.cdEnd) return V('cd', { cid: 'C' + A.cdEnd, cls: 'run', label: 'Rally timer starting in', time: String(Math.ceil((A.cdEnd - t) / 1000)), rem: A.cdEnd - t });
+      const L = plan.hit[uid] - Math.round(prof.march * 1000), rem = L - t, cid = 'L' + plan.hit[uid];
+      if (rem > 0) return V('run', { cid: cid, cls: rem < 3000 ? 'warn' : 'run', label: esc(prof.sym) + ' launch in', time: fmtCount(rem), rem: rem });
+      if (t < L + 1500) return V('send', { cid: cid, cls: 'go', label: esc(prof.sym), time: 'SEND', go: true, say: 'Send' });
+      if (t < plan.hit[uid] + 3000) return V('launched', { label: 'Rally running', time: 'LAUNCHED', sub: esc(prof.sym) });
+      return V('adone', { label: 'Done', time: 'DONE', sub: 'wait for the admin' });
+    }
+    return V('lead-x', { label: '', time: '…' });
+  }
+  /* joiner */
+  const lds = leadersNow();
+  if (!reg || !me.rally){
+    if (!A.confirmed) return V('join-wait', { label: 'Waiting for leaders', time: 'WAIT', ctrl: btn('role-back', '◂', 'alt') });
+    if (!ui.pendingRally)
+      return V('join-pick:' + lds.map(l => l.uid + l.sym).join(','), { label: 'Pick your rally', ctrl:
+        lds.map(l => btn('pick', esc(l.sym), 'alt', 'data-u="' + l.uid + '"')).join('') + btn('role-back', '◂', 'alt') });
+    const pl = lds.find(l => l.uid === ui.pendingRally);
+    return V('join-march:' + ui.pendingRally, { label: 'Joining ' + esc(pl ? pl.sym : '?') + ' · your march', ctrl:
+      marchInput(prof.march) + btn('join-ok', 'OK') + btn('pick-back', '◂', 'alt') + '<span class="err" id="inErr"></span>' });
+  }
+  const ld = (D.players || {})[me.rally], sym = ld ? esc(ld.sym) : '?';
+  if (A.stage === 'countdown' && plan && plan.launch && plan.launch[me.rally] != null){
+    if (t < A.cdEnd) return V('jcd', { cid: 'C' + A.cdEnd, cls: 'run', label: 'Joining ' + sym, time: String(Math.ceil((A.cdEnd - t) / 1000)), sub: 'rally timer starting', rem: A.cdEnd - t });
+    const L = plan.launch[me.rally];
+    if (t < L) return V('jstand', { label: 'Joining ' + sym, time: 'WAIT', sub: 'rally not started yet' });
+    if (t < L + 15000) return V('jgo', { cid: 'J' + L, cls: 'go', label: sym, time: 'RALLY STARTED', sub: 'JOIN NOW', go: true, say: 'Rally started. Join now.' });
+    return V('jdone', { label: 'Done', time: 'DONE', sub: 'wait for the admin' });
+  }
+  return V('jstby:' + A.stage, { label: 'Joining ' + sym, time: A.stage === 'ready' ? 'READY?' : 'STANDBY', sub: 'march ' + fmtMS(prof.march), ctrl: btn('join-change', '◂ change', 'alt') });
+}
+
+function defenseView(t){
+  const mar = prof.dmarch != null ? prof.dmarch : prof.march;
+  if (mar == null || ui.editD)
+    return V('def-entry:' + ui.editD, { label: 'March to center', ctrl: marchInput(mar) + btn('def-ok', 'OK') + (ui.editD ? btn('def-cancel', '◂', 'alt') : '') + '<span class="err" id="inErr"></span>' });
+  const list = launchList((D.def && D.def.waves) || [], mar), st = defState(list, t);
+  if (st.kind === 'count'){
+    const it = st.item, nx = st.nextGap != null ? ' · then ' + st.nextGap.toFixed(1) + 's' : '';
+    return V('dc', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: (it.urgent || st.rem < 3000) ? 'warn' : 'run', label: it.label + ' · send in', time: fmtCount(st.rem), sub: it.name + nx, cnt: st.left, rem: st.rem });
+  }
+  if (st.kind === 'send'){
+    const it = st.item;
+    return V('ds', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: 'go', label: it.label, time: 'SEND', cnt: st.left, go: true, say: 'Send' });
+  }
+  if (st.kind === 'done') return V('ddone', { label: 'All sent', time: 'DONE', sub: 'Check troop ratios', cls: 'idle' });
+  return V('didle', { label: 'Defense', time: 'STANDBY', sub: 'center march ' + fmtMS(mar), ctrl: btn('def-edit', '✎ march', 'alt') });
+}
+
+function viewNow(){
+  if (Date.now() < modeBannerUntil && D) return V('mode', { cls: 'warn', label: 'MODE CHANGE', time: D.mode === 'defense' ? 'DEFENSE' : 'ATTACK' });
+  if (!D) return V('conn', { label: live ? '' : 'Connecting…', time: '…' });
+  return D.mode === 'defense' ? defenseView(now()) : attackView(now());
+}
+
+/* ---------- canvas for the phone pop-out ---------- */
+const cv = $('cv'), g = cv.getContext('2d'), vid = $('vid');
+const colors = { idle: '#141b27', run: '#141b27', warn: '#2a1215', go: '#22c55e' };
+function plain(s){ return String(s).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'"); }
+function draw(v){
+  const w = cv.width, h = cv.height;
+  g.fillStyle = colors[v.cls] || colors.idle; g.fillRect(0, 0, w, h);
+  g.strokeStyle = v.cls === 'warn' ? '#ef4444' : v.cls === 'go' ? '#22c55e' : '#2b374a';
+  g.lineWidth = h * 0.04; g.strokeRect(h * 0.02, h * 0.02, w - h * 0.04, h - h * 0.04);
+  g.textAlign = 'center';
+  const dark = v.cls === 'go';
+  g.fillStyle = dark ? '#04210f' : '#9fb0c3';
+  g.font = '700 ' + Math.round(h * 0.13) + 'px system-ui,sans-serif'; g.fillText(plain(v.label), w / 2, h * 0.22);
+  g.fillStyle = dark ? '#04210f' : v.cls === 'warn' ? '#ff6b6b' : v.cls === 'run' ? '#f5b301' : '#e6edf3';
+  const tx = plain(v.time), size = Math.min(h * 0.4, (w * 0.88) / (Math.max(tx.length, 1) * 0.6));
+  g.font = '800 ' + Math.round(size) + 'px system-ui,sans-serif'; g.fillText(tx, w / 2, h * 0.64);
+  g.fillStyle = dark ? '#04210f' : '#9fb0c3';
+  g.font = '600 ' + Math.round(h * 0.11) + 'px system-ui,sans-serif'; g.fillText(plain(v.sub), w / 2, h * 0.88);
+  if (v.cnt != null){
+    g.textAlign = 'right'; g.fillStyle = dark ? '#04210f' : '#e6edf3';
+    g.font = '800 ' + Math.round(h * 0.15) + 'px system-ui,sans-serif'; g.fillText(String(v.cnt), w - h * 0.08, h * 0.2);
+  }
+}
+
+/* ---------- main tick ---------- */
+function tick(){
+  const v = viewNow();
+  box.className = 'box ' + v.cls;
+  lab.innerHTML = v.label; tim.innerHTML = v.time; tim.className = 't' + (v.time.length > 8 ? ' sm' : ''); sub.innerHTML = v.sub;
+  if (v.cnt != null){ cntEl.hidden = false; cntEl.textContent = v.cnt; } else cntEl.hidden = true;
+  if (v.key !== lastKey){ ctrl.innerHTML = v.ctrl; lastKey = v.key; }
+  if (v.rem != null){ const s = Math.ceil(v.rem / 1000); if (s >= 1 && s <= 3) cue(v.cid + ':' + s, 660, 120, String(s), [60]); }
+  if (v.go) cue(v.cid + ':go', 990, 400, v.say || 'Send', [150, 60, 150]);
+  draw(v);
+  tickMe(); tickAdmin();
+  if (D && D.mode === 'attack' && D.attack.stage !== 'ready') starting = false;
+}
 const worker = new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),100)'])));
 worker.onmessage = tick;
 
-function pad(n, l = 2){ return String(n).padStart(l, '0'); }
-function clockText(){
-  const d = new Date();
-  return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + Math.floor(d.getMilliseconds() / 100);
-}
-
-function beep(freq, ms){
-  if (!ctx) return;
-  const o = ctx.createOscillator(), v = ctx.createGain();
-  o.frequency.value = freq; v.gain.value = 0.2;
-  o.connect(v); v.connect(ctx.destination);
-  o.start(); o.stop(ctx.currentTime + ms / 1000);
-}
-function say(text){
-  if (!ctx || !('speechSynthesis' in window)) return;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-}
-function alertAt(key, freq, ms, text, vib){
-  if (spoke[key]) return;
-  spoke[key] = true;
-  beep(freq, ms);
-  if (text) say(text);
-  if (vib && navigator.vibrate) navigator.vibrate(vib);
-}
-
-function currentState(){
-  if (target === null) return { cls: 'idle', label: 'Idle', time: clockText().slice(0, 8) };
-  const r = target - Date.now();
-  if (r > 0){
-    const s = Math.ceil(r / 1000);
-    if (s <= 3) alertAt('c' + s, 660, 120, String(s), 60);
-    return { cls: r < 3000 ? 'warn' : 'run', label: 'Send in', time: (r / 1000).toFixed(1) };
+/* ---------- player actions (box + me panel) ---------- */
+const invalidate = () => { lastKey = null; };
+function myEntry(extra){ const me = (D.players || {})[uid]; return Object.assign({ ep: epoch(), t: (me && me.t) || Date.now() }, extra); }
+box.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || !D) return;
+  const act = b.dataset.act, root = b.closest('#box') || box, q = s => root.querySelector(s);
+  const err = m => { const x = q('#inErr'); if (x) x.textContent = m; };
+  if (act === 'role-lead'){ prof.role = 'lead'; saveProf(); }
+  else if (act === 'role-join'){ prof.role = 'join'; saveProf(); }
+  else if (act === 'role-back'){ prof.role = null; ui.editing = false; ui.pendingRally = null; saveProf(); }
+  else if (act === 'lead-edit'){ ui.editing = true; }
+  else if (act === 'lead-ok'){
+    const sym = q('#inSym').value.toUpperCase().replace(/[^A-Z0-9]/g, ''), m = parseMS(q('#inMar').value);
+    if (sym.length !== 2) return err('Symbol must be 2 characters');
+    if (!m || m < 1) return err('Enter your march time');
+    if (leadersNow().some(l => l.uid !== uid && l.sym === sym)) return err('Symbol taken');
+    prof.sym = sym; prof.march = m; saveProf(); ui.editing = false;
+    upd({ ['players.' + uid]: myEntry({ role: 'lead', sym: sym, march: m, ready: false }) });
   }
-  if (r > -1500){
-    alertAt('go', 990, 400, 'Send', [150, 60, 150]);
-    return { cls: 'go', label: 'SEND', time: 'GO' };
+  else if (act === 'ready'){ upd({ ['players.' + uid + '.ready']: true }); }
+  else if (act === 'pick'){ ui.pendingRally = b.dataset.u; }
+  else if (act === 'pick-back'){ ui.pendingRally = null; }
+  else if (act === 'join-ok'){
+    const m = parseMS(q('#inMar').value); if (!m || m < 1) return err('Enter your march time');
+    prof.march = m; saveProf();
+    upd({ ['players.' + uid]: myEntry({ role: 'join', march: m, rally: ui.pendingRally }) }); ui.pendingRally = null;
   }
-  if (r > -11500) return { cls: 'idle', label: 'Done', time: 'Check troop ratios' };
-  target = null; spoke = {};
-  return { cls: 'idle', label: 'Idle', time: clockText().slice(0, 8) };
+  else if (act === 'join-change'){ upd({ ['players.' + uid + '.rally']: deleteField() }); }
+  else if (act === 'def-ok'){
+    const m = parseMS(q('#inMar').value); if (!m || m < 1) return err('Enter your march time');
+    prof.dmarch = m; saveProf(); ui.editD = false;
+  }
+  else if (act === 'def-edit'){ ui.editD = true; }
+  else if (act === 'def-cancel'){ ui.editD = false; }
+  invalidate(); tick();
+});
+
+function tickMe(){
+  const def = D && D.mode === 'defense';
+  const val = def ? (prof.dmarch != null ? prof.dmarch : prof.march) : prof.march;
+  $('meMar').textContent = fmtMS(val);
+  $('meLbl').textContent = def ? 'March to center' : 'March to target';
+  $('meInfo').textContent = (prof.role ? (prof.role === 'lead' ? 'Rally lead ' + (prof.sym || '') : 'Rally joiner') : 'No role yet') + (isAdmin ? ' · admin' : '');
 }
-
-const colors = { idle: '#141b27', run: '#141b27', warn: '#2a1215', go: '#22c55e' };
-function draw(s){
-  g.fillStyle = colors[s.cls]; g.fillRect(0, 0, 320, 140);
-  g.strokeStyle = s.cls === 'warn' ? '#ef4444' : s.cls === 'go' ? '#22c55e' : '#2b374a';
-  g.lineWidth = 6; g.strokeRect(3, 3, 314, 134);
-  g.textAlign = 'center';
-  g.fillStyle = s.cls === 'go' ? '#04210f' : '#9fb0c3';
-  g.font = '700 20px system-ui,sans-serif'; g.fillText(s.label, 160, 40);
-  g.fillStyle = s.cls === 'go' ? '#04210f' : s.cls === 'warn' ? '#ff6b6b' : s.cls === 'run' ? '#f5b301' : '#e6edf3';
-  g.font = '800 ' + (s.time.length > 8 ? 26 : 56) + 'px system-ui,sans-serif';
-  g.fillText(s.time, 160, 100);
-}
-
-function tick(){
-  const s = currentState();
-  box.className = 'box ' + s.cls;
-  lab.textContent = s.label;
-  tim.textContent = s.time;
-  clk.textContent = 'Device clock ' + clockText();
-  draw(s);
-}
-
-$('start').onclick = () => { spoke = {}; target = Date.now() + 15000; msg.textContent = ''; };
-$('stop').onclick = () => { target = null; spoke = {}; };
-
-$('audio').onclick = () => {
-  ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
-  ctx.resume();
-  beep(660, 150);
-  say('Sound is on');
-  $('audio').textContent = 'Sound is on';
+$('me').addEventListener('click', e => {
+  const b = e.target.closest('[data-n]'); if (!b || !D) return;
+  const d = parseFloat(b.dataset.n), def = D.mode === 'defense';
+  const cur = def ? (prof.dmarch != null ? prof.dmarch : prof.march) : prof.march;
+  if (cur == null) return note('Enter a march time first.');
+  const nv = Math.max(1, Math.round((cur + d) * 10) / 10);
+  if (def) prof.dmarch = nv; else {
+    prof.march = nv; saveProf();
+    const me = (D.players || {})[uid]; if (me && me.ep === epoch()) upd({ ['players.' + uid + '.march']: nv });
+  }
+  saveProf(); tick();
+});
+$('resetMe').onclick = () => {
+  if (!confirm('Leave and clear your role, symbol and march?')) return;
+  prof = { role: null, sym: '', march: null, dmarch: null }; saveProf();
+  ui.editing = false; ui.pendingRally = null; ui.editD = false;
+  if (D && D.players && D.players[uid]) upd({ ['players.' + uid]: deleteField() });
+  invalidate(); tick();
 };
 
-$('wake').onclick = async () => {
-  if (!('wakeLock' in navigator)){ msg.textContent = 'Keep awake is not supported here.'; return; }
+/* ---------- admin ---------- */
+const SKEL = '<div class="card"><div class="row tight"><b>ADMIN</b><span class="sp"></span><button class="mini alt" data-a="logout">Log out</button></div>' +
+  '<div class="tabs"><button id="tabA" data-a="tab" data-m="attack">1 · RALLY ATTACK</button><button id="tabD" data-a="tab" data-m="defense">2 · DEFENSE</button></div>' +
+  '<div id="aAtk"></div><div id="aDef" hidden>' +
+  '<div class="h">KNOWN ENEMIES · TAP TO FILL</div><div id="chips" class="row"></div>' +
+  '<div class="h">NEW ATTACK</div><div class="wcard"><div class="ln"><input id="bName" class="wide" maxlength="12" placeholder="NAME" aria-label="Enemy name"><span class="mut">march</span>' +
+  '<button class="s mini alt" data-a="bm" data-d="-1">−</button><input id="bMar" inputmode="numeric" value="0:30" aria-label="Enemy march"><button class="s mini alt" data-a="bm" data-d="1">+</button></div>' +
+  '<div class="ln"><button id="phR" class="mini" data-a="ph" data-p="rally">RALLY 5:00</button><button id="phM" class="mini" data-a="ph" data-p="march">ALREADY MARCHING</button></div>' +
+  '<div class="ln"><span class="mut">timer in game</span><input id="bTim" inputmode="numeric" placeholder="435" aria-label="Timer"><span class="mut" id="bEcho"></span><span class="sp"></span>' +
+  '<button id="bSync" class="go" data-a="sync">SYNC</button><button id="bCancel" class="alt mini" data-a="bcancel" hidden>✕</button></div></div>' +
+  '<div class="h">TIMELINE</div><div id="waves"></div></div></div>';
+
+function loginForm(){
+  adminSec.hidden = false;
+  adminSec.innerHTML = '<div class="card"><div class="row tight"><input id="pw" type="password" class="wide" style="text-transform:none;width:160px" placeholder="Admin password" aria-label="Admin password"><button data-a="login">Log in</button><button class="alt mini" data-a="closelogin">✕</button></div>' +
+    (ADMIN_PASSWORD === 'CHANGE-ME' ? '<div class="mut">Default password is still in use. Edit ADMIN_PASSWORD in index.html.</div>' : '') + '<div class="err" id="pwErr"></div></div>';
+}
+$('adminBtn').onclick = () => { if (isAdmin) return; loginForm(); const p = $('pw'); if (p) p.focus(); };
+
+async function claimAdmin(){
+  const r = roomRef();
   try {
-    wake = await navigator.wakeLock.request('screen');
-    $('wake').textContent = 'Screen kept awake';
-    wake.addEventListener('release', () => { $('wake').textContent = 'Keep screen awake'; });
-  } catch (e){ msg.textContent = 'Keep awake was refused: ' + e.message; }
-};
-document.addEventListener('visibilitychange', async () => {
-  if (wake && document.visibilityState === 'visible' && wake.released){
-    try { wake = await navigator.wakeLock.request('screen'); } catch (e) {}
+    await ensureRoom();
+    await runTransaction(db, async tx => {
+      const s = await tx.get(r), a = s.data() && s.data().admin;
+      if (a && a.uid !== uid && now() - a.hb < 30000) throw new Error('taken');
+      tx.update(r, { admin: { uid: uid, hb: Math.round(now()) } });
+    });
+    return true;
+  } catch (e){ return e.message === 'taken' ? 'taken' : (fail(e), false); }
+}
+async function becomeAdmin(){
+  const ok = await claimAdmin();
+  if (ok === 'taken'){ const x = $('pwErr'); if (x) x.textContent = 'Another admin is active.'; else note('Another admin is active.'); return; }
+  if (!ok) return;
+  isAdmin = true; try { localStorage.setItem('tacsync_admin', '1'); } catch (e) {}
+  adminSec.hidden = false; adminSec.innerHTML = SKEL; $('adminBtn').hidden = true;
+  clearInterval(hbTimer); hbTimer = setInterval(() => upd({ 'admin.hb': Math.round(now()) }), 10000);
+  syncBar(); if (D) renderAdmin();
+}
+function leaveAdmin(msg){
+  isAdmin = false; clearInterval(hbTimer); adminSec.hidden = true; adminSec.innerHTML = ''; $('adminBtn').hidden = false;
+  try { localStorage.removeItem('tacsync_admin'); } catch (e) {}
+  if (msg) note(msg);
+}
+
+function renderAdmin(){
+  if (!isAdmin || !D || !$('aAtk')) return;
+  const def = D.mode === 'defense';
+  $('tabA').classList.toggle('on', !def); $('tabD').classList.toggle('on', def);
+  $('aAtk').hidden = def; $('aDef').hidden = !def;
+  if (def) renderDef(); else renderAtk();
+}
+function renderAtk(){
+  const A = D.attack, L = leadersNow(), offs = offsetsFor(L), J = joinersNow();
+  const list = L.map((l, i) => ({ uid: l.uid, march: l.march, off: offs[i] }));
+  const pv = L.length ? buildPlan(list, A.buffer || 10, 0) : null;
+  let h = '<div class="row tight"><b>Leaders ' + L.length + ' · Joiners ' + J.length + '</b><span class="sp"></span>' +
+    '<button class="' + (A.confirmed ? 'go' : '') + '" data-a="confirm" ' + (A.confirmed ? 'disabled' : '') + '>' + (A.confirmed ? 'LEADERS LOCKED' : 'CONFIRM LEADERS') + '</button></div>';
+  h += '<div class="h">HIT ORDER · FIRST HIT ON TOP</div>';
+  L.forEach((l, i) => {
+    const rdy = A.stage === 'ready' ? l.ready : A.stage === 'countdown';
+    const jn = J.filter(j => j.rally === l.uid).length;
+    h += '<div class="lrow"><span class="ar"><button class="alt" data-a="up" data-u="' + l.uid + '" aria-label="Move up">↑</button><button class="alt" data-a="dn" data-u="' + l.uid + '" aria-label="Move down">↓</button></span>' +
+      '<span class="sym ' + (rdy ? 'rdy' : '') + '">' + esc(l.sym) + '</span><b>' + fmtMS(l.march) + '</b><span class="mut">' + jn + ' joined</span><span class="sp"></span>' +
+      '<button class="alt s mini" data-a="off" data-u="' + l.uid + '" data-d="-0.1">−</button><b>+' + offs[i].toFixed(1) + '</b><button class="alt s mini" data-a="off" data-u="' + l.uid + '" data-d="0.1">+</button>' +
+      '<b class="mut" data-ar="' + l.uid + '" data-pv="' + (pv ? (pv.launch[l.uid] / 1000).toFixed(1) : '') + '"></b></div>';
+  });
+  if (!L.length) h += '<div class="mut">No leaders yet. Share the link and ask leaders to pick LEAD.</div>';
+  h += '<div class="row tight"><span class="mut">Lead buffer</span>' + [5, 10, 15, 30].map(n => '<button class="mini ' + ((A.buffer || 10) === n ? '' : 'alt') + '" data-a="buf" data-n="' + n + '">' + n + 's</button>').join('') + '</div>';
+  h += '<div class="row"><button class="go" data-a="rcheck">READY CHECK</button><button class="alt" data-a="start">START NOW</button><button class="rd" data-a="reset">RESET</button></div>';
+  h += '<div class="mut" id="atkSt"></div><div class="mut">Offsets: 0.1 s apart, last rally +0.4 s. Change any with − and +.</div>';
+  $('aAtk').innerHTML = h;
+}
+function renderDef(){
+  const W = (D.def && D.def.waves) || [], E = (D.def && D.def.enemies) || [], info = waveInfo(W);
+  $('chips').innerHTML = E.length ? E.map(e => '<button class="alt mini" data-a="enemy" data-n="' + esc(e.name) + '">' + esc(e.name) + ' ' + fmtMS(e.march) + '</button>').join('') : '<span class="mut">None yet. New names start at 0:30.</span>';
+  $('phR').className = 'mini ' + (bar.phase === 'rally' ? '' : 'alt'); $('phM').className = 'mini ' + (bar.phase === 'march' ? '' : 'alt');
+  $('bSync').textContent = bar.editId ? 'RESYNC' : 'SYNC'; $('bCancel').hidden = !bar.editId;
+  let h = '';
+  info.forEach((w, i) => {
+    if (w.gap !== null) h += '<div class="mut ' + (w.urgent ? 'urg' : '') + '" style="margin:2px 0 2px 10px">gap ' + info[i - 1].label + ' → ' + w.label + ' ' + w.gap.toFixed(1) + ' s</div>';
+    h += '<div class="wcard ' + (w.urgent ? 'u' : '') + '"><div class="ln"><b>' + w.label + ' ' + esc(w.name) + '</b><span class="tm ' + (w.urgent ? 'urg' : '') + '" data-wv="' + w.id + '"></span><span class="sp"></span>' +
+      '<span class="mut">land +</span><b>' + (w.off == null ? 0.4 : w.off).toFixed(1) + '</b><button class="s" data-a="woff" data-id="' + w.id + '" data-d="-0.1">−.1</button><button class="s" data-a="woff" data-id="' + w.id + '" data-d="0.1">+.1</button></div>' +
+      '<div class="ln"><div class="adj">' + [-1, -0.1, 0.1, 1].map(d => '<button data-a="wsh" data-id="' + w.id + '" data-d="' + d + '">' + (d > 0 ? '+' : '−') + Math.abs(d).toString().replace('0.', '.') + '</button>').join('') +
+      '</div><span class="sp"></span><button class="s" data-a="wre" data-id="' + w.id + '">RESYNC</button><button class="s" data-a="wdel" data-id="' + w.id + '">✕</button></div></div>';
+  });
+  if (!info.length) h = '<div class="mut">No incoming attacks.</div>'; else h += '<button class="alt mini" data-a="wclear">Clear all</button>';
+  $('waves').innerHTML = h;
+}
+function tickAdmin(){
+  if (!isAdmin || !D) return;
+  const t = now();
+  if (D.mode === 'attack'){
+    const A = D.attack, plan = A.plan;
+    document.querySelectorAll('[data-ar]').forEach(el => {
+      const u = el.dataset.ar;
+      if (A.stage === 'countdown' && plan && plan.launch[u] != null){
+        const rem = plan.launch[u] - t; el.textContent = rem > 0 ? 'T−' + fmtCount(rem) : 'launched';
+      } else el.textContent = el.dataset.pv ? 'starts ' + el.dataset.pv : '';
+    });
+    const st = $('atkSt');
+    if (st) st.textContent = A.stage === 'countdown' ? (t < A.cdEnd ? 'Starting in ' + Math.ceil((A.cdEnd - t) / 1000) : 'Rally op running') : A.stage === 'ready' ? 'Ready check: waiting for leaders' : (A.confirmed ? 'Leaders confirmed' : 'Collecting leaders');
+  } else {
+    const W = (D.def && D.def.waves) || [];
+    document.querySelectorAll('[data-wv]').forEach(el => {
+      const w = W.find(x => x.id === el.dataset.wv); if (!w) return;
+      el.textContent = (w.rallyEnd && t < w.rallyEnd) ? 'RALLY ' + fmtCount(w.rallyEnd - t) : t < w.landAt ? 'MARCH ' + fmtCount(w.landAt - t) : 'LANDED';
+    });
+    if (Math.floor(t / 1000) % 10 === 0 && W.some(w => w.landAt < t - 60000)) upd({ 'def.waves': W.filter(w => w.landAt >= t - 60000) });
+  }
+}
+function syncBar(){ $('bEcho').textContent = ''; }
+
+adminSec.addEventListener('input', e => {
+  if (e.target.id === 'bTim'){ const s = parseMS(e.target.value); $('bEcho').textContent = s == null ? '' : '= ' + fmtMS(s); }
+});
+adminSec.addEventListener('click', async e => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const a = b.dataset.a;
+  if (a === 'login'){
+    if ($('pw').value === ADMIN_PASSWORD) return becomeAdmin();
+    $('pwErr').textContent = 'Wrong password'; return;
+  }
+  if (a === 'closelogin'){ adminSec.hidden = true; adminSec.innerHTML = ''; return; }
+  if (!D || !isAdmin) return;
+  const A = D.attack, W = (D.def && D.def.waves) || [], E = (D.def && D.def.enemies) || [];
+  if (a === 'logout'){ upd({ admin: null }); return leaveAdmin(); }
+  if (a === 'tab'){
+    const m = b.dataset.m; if (m === D.mode) return;
+    if (confirm('Switch to ' + (m === 'defense' ? 'DEFENSE' : 'RALLY ATTACK') + ' mode? All players get a notice. Roles and marches are kept.')) upd({ mode: m, modeAt: Math.round(now()) });
+  }
+  else if (a === 'confirm'){ const L = leadersNow(); upd({ 'attack.confirmed': true, 'attack.order': L.map(l => l.uid) }); }
+  else if (a === 'up' || a === 'dn'){
+    const ord = leadersNow().map(l => l.uid), i = ord.indexOf(b.dataset.u), j = a === 'up' ? i - 1 : i + 1;
+    if (j < 0 || j >= ord.length) return;
+    [ord[i], ord[j]] = [ord[j], ord[i]]; upd({ 'attack.order': ord, 'attack.off': {} });
+  }
+  else if (a === 'off'){
+    const L = leadersNow(), offs = offsetsFor(L), i = L.findIndex(l => l.uid === b.dataset.u);
+    upd({ ['attack.off.' + b.dataset.u]: Math.max(0, Math.round((offs[i] + parseFloat(b.dataset.d)) * 10) / 10) });
+  }
+  else if (a === 'buf'){ upd({ 'attack.buffer': parseInt(b.dataset.n, 10) }); }
+  else if (a === 'rcheck'){
+    if (!A.confirmed) return note('Confirm leaders first.');
+    const u = { 'attack.stage': 'ready', 'attack.plan': null };
+    leadersNow().forEach(l => { u['players.' + l.uid + '.ready'] = false; });
+    upd(u);
+  }
+  else if (a === 'start'){ if (!leadersNow().length) return note('No leaders yet.'); startCountdown(); }
+  else if (a === 'reset'){
+    if (confirm('Reset the op? Leaders and joiners go back and re-enter.')) upd({ 'attack.stage': 'lobby', 'attack.confirmed': false, 'attack.plan': null, 'attack.cdEnd': 0, 'attack.order': [], 'attack.off': {}, 'attack.epoch': (A.epoch || 0) + 1 });
+  }
+  /* defense */
+  else if (a === 'enemy'){
+    const en = E.find(x => x.name === b.dataset.n); if (!en) return;
+    $('bName').value = en.name; $('bMar').value = fmtMS(en.march); $('bTim').focus();
+  }
+  else if (a === 'bm'){ const m = parseMS($('bMar').value) || 30; $('bMar').value = fmtMS(Math.max(1, m + parseInt(b.dataset.d, 10))); }
+  else if (a === 'ph'){ bar.phase = b.dataset.p; renderAdmin(); }
+  else if (a === 'bcancel'){ bar.editId = null; $('bName').value = ''; $('bTim').value = ''; $('bEcho').textContent = ''; renderAdmin(); }
+  else if (a === 'sync'){
+    const name = ($('bName').value.trim() || 'ENEMY').toUpperCase().slice(0, 12);
+    const known = E.find(x => x.name === name);
+    const march = parseMS($('bMar').value) || (known ? known.march : 30), timer = parseMS($('bTim').value);
+    if (timer == null) return note('Type the timer shown in the game.');
+    if (!bar.editId && W.length >= 6) return note('Six attacks is the limit. Clear one first.');
+    const t = Math.round(now());
+    const rallyEnd = bar.phase === 'rally' ? t + timer * 1000 : null, landAt = bar.phase === 'rally' ? rallyEnd + march * 1000 : t + timer * 1000;
+    const old = bar.editId ? W.find(x => x.id === bar.editId) : null;
+    const w = { id: bar.editId || ('w' + t), name: name, march: march, rallyEnd: rallyEnd, landAt: landAt, off: old && old.off != null ? old.off : 0.4 };
+    const nw = old ? W.map(x => x.id === w.id ? w : x) : W.concat([w]);
+    const ne = E.filter(x => x.name !== name).concat([{ name: name, march: march }]);
+    upd({ 'def.waves': nw, 'def.enemies': ne });
+    bar.editId = null; $('bName').value = ''; $('bTim').value = ''; $('bEcho').textContent = '';
+  }
+  else if (a === 'woff' || a === 'wsh' || a === 'wre' || a === 'wdel' || a === 'wclear'){
+    if (a === 'wclear'){ if (confirm('Clear all incoming attacks?')) upd({ 'def.waves': [] }); return; }
+    const w = W.find(x => x.id === b.dataset.id); if (!w) return;
+    if (a === 'wdel') return upd({ 'def.waves': W.filter(x => x.id !== w.id) });
+    if (a === 'wre'){
+      bar.editId = w.id; bar.phase = (w.rallyEnd && now() < w.rallyEnd) ? 'rally' : 'march';
+      $('bName').value = w.name; $('bMar').value = fmtMS(w.march); $('bTim').value = ''; $('bTim').focus(); return renderAdmin();
+    }
+    const d = parseFloat(b.dataset.d);
+    const nw = W.map(x => {
+      if (x.id !== w.id) return x;
+      if (a === 'woff') return Object.assign({}, x, { off: Math.max(0, Math.round(((x.off == null ? 0.4 : x.off) + d) * 10) / 10) });
+      return Object.assign({}, x, { landAt: x.landAt + Math.round(d * 1000), rallyEnd: x.rallyEnd ? x.rallyEnd + Math.round(d * 1000) : null });
+    });
+    upd({ 'def.waves': nw });
   }
 });
 
-$('pipDoc').onclick = async () => {
-  if (!('documentPictureInPicture' in window)){ msg.textContent = 'Pop-out window needs Chrome or Edge on a computer. Try the video button.'; return; }
-  try {
-    pipWin = await documentPictureInPicture.requestWindow({ width: 280, height: 130 });
-    const st = pipWin.document.createElement('style');
-    st.textContent = document.querySelector('style').textContent + 'body{padding:6px}';
-    pipWin.document.head.append(st);
-    pipWin.document.body.append(box);
-    pipWin.addEventListener('pagehide', () => { $('clock').before(box); pipWin = null; });
-    msg.textContent = '';
-  } catch (e){ msg.textContent = 'Pop-out was refused: ' + e.message; }
+function startCountdown(){
+  const A = D.attack, L = leadersNow(); if (!L.length) return;
+  const offs = offsetsFor(L), cdEnd = Math.round(now()) + 3500;
+  const plan = buildPlan(L.map((l, i) => ({ uid: l.uid, march: l.march, off: offs[i] })), A.buffer || 10, cdEnd);
+  upd({ 'attack.stage': 'countdown', 'attack.cdEnd': cdEnd, 'attack.plan': plan });
+}
+function maybeAutoStart(){
+  if (!isAdmin || starting || D.mode !== 'attack' || D.attack.stage !== 'ready') return;
+  const L = leadersNow();
+  if (L.length && L.every(l => l.ready)){ starting = true; startCountdown(); }
+}
+
+/* ---------- doc subscription ---------- */
+function onDoc(){
+  if (lastMode !== null && D.mode !== lastMode){ modeBannerUntil = Date.now() + 2000; beep(520, 200); invalidate(); }
+  lastMode = D.mode;
+  if (isAdmin){
+    if (D.admin && D.admin.uid !== uid) leaveAdmin('Another admin took over.');
+    else { maybeAutoStart(); renderAdmin(); }
+  }
+  tick();
+}
+function subscribe(){
+  if (unsub) unsub(); D = null; live = false; lastMode = null; invalidate();
+  ensureRoom().catch(fail);
+  unsub = onSnapshot(roomRef(), s => {
+    if (!s.exists()){ ensureRoom().catch(fail); return; }
+    D = s.data(); live = true; $('net').textContent = 'Live'; $('net').className = 'pill live'; onDoc();
+  }, e => { live = false; $('net').textContent = 'Offline'; $('net').className = 'pill off'; fail(e); });
+}
+$('room').onchange = e => {
+  const v = e.target.value.replace(/[^A-Za-z0-9_-]/g, '').toUpperCase() || '261';
+  e.target.value = v; roomKey = 'R' + v; try { localStorage.setItem('tacsync_room', v); } catch (x) {}
+  subscribe();
 };
 
-/* Start the hidden video early so the pop-out request can run inside the tap itself. */
-function primeVideo(){
-  try {
-    tick();
-    if (!vid.srcObject) vid.srcObject = cv.captureStream(10);
-    vid.play().catch(() => {});
-  } catch (e) {}
-}
-primeVideo();
-document.addEventListener('pointerdown', primeVideo, { once: true });
-
-$('pipVid').onclick = () => {
+/* ---------- pop-out, wake lock ---------- */
+function primeVideo(){ try { tick(); if (!vid.srcObject) vid.srcObject = cv.captureStream(10); vid.play().catch(() => {}); } catch (e) {} }
+primeVideo(); document.addEventListener('pointerdown', primeVideo, { once: true });
+$('pop').onclick = () => {
+  if ('documentPictureInPicture' in window){
+    documentPictureInPicture.requestWindow({ width: 320, height: 210 }).then(pw => {
+      const st = pw.document.createElement('style');
+      st.textContent = Array.from(document.querySelectorAll('style')).map(s => s.textContent).join('\n') + 'body{margin:0;padding:6px;background:#0d1117;color:#e6edf3;font:14px system-ui,sans-serif}';
+      pw.document.head.append(st); pw.document.body.append(box);
+      pw.addEventListener('pagehide', () => $('boxSlot').append(box));
+    }).catch(e => note('Pop-out refused: ' + e.message));
+    return;
+  }
   if (vid.paused) primeVideo();
   try {
-    if (vid.webkitSetPresentationMode && !vid.requestPictureInPicture){
-      vid.webkitSetPresentationMode('picture-in-picture');
-    } else if (vid.requestPictureInPicture){
-      vid.requestPictureInPicture().then(() => { msg.textContent = ''; }).catch(e => {
-        if (vid.webkitSetPresentationMode){
-          try { vid.webkitSetPresentationMode('picture-in-picture'); return; } catch (e2) {}
-        }
-        msg.textContent = 'Video pop-out was refused: ' + e.message + ' Tap the button again.';
+    if (vid.requestPictureInPicture){
+      vid.requestPictureInPicture().catch(e => {
+        if (vid.webkitSetPresentationMode){ try { vid.webkitSetPresentationMode('picture-in-picture'); return; } catch (x) {} }
+        note('Pop-out refused: ' + e.message + ' Tap again.');
       });
-    } else {
-      msg.textContent = 'This browser has no video pop-out.';
-    }
-  } catch (e){ msg.textContent = 'Video pop-out was refused: ' + e.message + ' Tap the button again.'; }
+    } else if (vid.webkitSetPresentationMode) vid.webkitSetPresentationMode('picture-in-picture');
+    else note('This browser has no pop-out.');
+  } catch (e) { note('Pop-out refused: ' + e.message + ' Tap again.'); }
 };
+let wake = null;
+$('wake').onclick = async () => {
+  if (!('wakeLock' in navigator)) return note('Keep awake is not supported here.');
+  try { wake = await navigator.wakeLock.request('screen'); $('wake').textContent = 'Screen kept awake'; wake.addEventListener('release', () => { $('wake').textContent = 'Keep screen awake'; }); }
+  catch (e) { note('Keep awake refused: ' + e.message); }
+};
+document.addEventListener('visibilitychange', async () => {
+  if (wake && wake.released && document.visibilityState === 'visible'){ try { wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
+});
 
-const caps = [
-  ['Pop-out window (computer)', 'documentPictureInPicture' in window],
-  ['Video pop-out', !!(vid.requestPictureInPicture || vid.webkitSetPresentationMode)],
-  ['Keep screen awake', 'wakeLock' in navigator],
-  ['Vibration', !!navigator.vibrate],
-  ['Voice', 'speechSynthesis' in window],
-  ['Secure page (https)', window.isSecureContext]
-];
-$('caps').innerHTML = caps.map(c => '<li class="' + (c[1] ? 'ok' : 'no') + '">' + c[0] + ': ' + (c[1] ? 'yes' : 'no') + '</li>').join('');
-tick();
+/* ---------- boot ---------- */
+(async function boot(){
+  tick();
+  try {
+    app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
+    await signInAnonymously(auth); uid = auth.currentUser.uid;
+  } catch (e){ fail(e); return; }
+  await syncClock();
+  $('sync').textContent = rttMs == null ? 'clock --' : 'clock ±' + Math.round(rttMs / 2) + 'ms';
+  setInterval(async () => { await syncClock(); $('sync').textContent = rttMs == null ? 'clock --' : 'clock ±' + Math.round(rttMs / 2) + 'ms'; }, 60000);
+  subscribe();
+  try { if (localStorage.getItem('tacsync_admin') === '1') becomeAdmin(); } catch (e) {}
+})();
 </script>
 </body>
 </html>
