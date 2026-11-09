@@ -34,6 +34,8 @@
 
   <div id="box" class="box idle"><div class="l" id="label">Idle</div><div class="t" id="time">--</div></div>
   <div id="clock"></div>
+  <p style="margin-top:10px">Video preview (this is what the phone pop-out shows):</p>
+  <video id="vid" muted playsinline autoplay style="width:240px;height:105px;background:#000;border-radius:6px"></video>
 
   <div class="row">
     <button id="start">Start 15 s countdown</button>
@@ -62,8 +64,7 @@
   </ul>
 </main>
 
-<video id="vid" muted playsinline style="position:fixed;left:-9999px;width:320px;height:140px"></video>
-<canvas id="cv" width="320" height="140" style="display:none"></canvas>
+<canvas id="cv" width="320" height="140" style="position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:.01;pointer-events:none"></canvas>
 
 <script>
 const $ = id => document.getElementById(id);
