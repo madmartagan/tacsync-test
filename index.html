@@ -8,17 +8,18 @@
 <style>
   :root{--bg:#0d1117;--pan:#141b27;--bd:#2b374a;--tx:#e6edf3;--mu:#9fb0c3;--am:#f5b301;--gr:#22c55e;--rd:#ef4444}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,"Segoe UI","Noto Sans","Noto Sans Arabic","Noto Sans KR","Noto Sans JP",sans-serif}
   main{max-width:480px;margin:0 auto;padding:10px}
-  button{border:0;border-radius:7px;background:var(--am);color:#1a1300;font:800 14px system-ui,sans-serif;padding:9px 12px;min-height:38px}
+  button{border:0;border-radius:7px;background:var(--am);color:#1a1300;font:800 14px system-ui,"Noto Sans Arabic","Noto Sans KR","Noto Sans JP",sans-serif;padding:9px 12px;min-height:38px}
   button.alt{background:var(--bd);color:var(--tx)}
   button.go{background:var(--gr);color:#04210f}
   button.rd{background:var(--rd);color:#fff}
   button.mini{min-height:30px;padding:4px 9px;font-size:12px}
   button:disabled{opacity:.6}
-  button:focus-visible,input:focus-visible{outline:3px solid #7aa7ff;outline-offset:1px}
-  input{background:#0b0f17;border:1px solid #3a4960;border-radius:6px;color:var(--tx);font:700 15px system-ui,sans-serif;padding:7px 8px;width:74px;text-align:center;text-transform:uppercase}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7aa7ff;outline-offset:1px}
+  input{background:#0b0f17;border:1px solid #3a4960;border-radius:6px;color:var(--tx);font:700 15px system-ui,sans-serif;padding:7px 8px;width:74px;text-align:center;text-transform:uppercase;direction:ltr}
   input.wide{width:120px}
+  select{background:var(--pan);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:3px 6px;font-size:12px}
   .top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
   .pill{background:var(--pan);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:12px;color:var(--mu);display:inline-flex;gap:5px;align-items:center}
   .pill input{width:56px;padding:2px 4px;font-size:12px}
@@ -31,6 +32,7 @@
   .mut{color:var(--mu);font-size:12px}
   .h{font-size:11px;letter-spacing:.06em;color:var(--mu);margin:12px 0 4px;font-weight:700}
   .box{position:relative;background:var(--pan);border:2px solid var(--bd);border-radius:10px;padding:8px 10px;text-align:center;min-height:120px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+  .box .l,.box .t,.box .s{unicode-bidi:plaintext}
   .box .l{font-size:13px;color:var(--mu)}
   .box .t{font-size:38px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
   .box .t.sm{font-size:20px}
@@ -48,7 +50,7 @@
   .tabs button{flex:1;background:var(--bd);color:var(--mu)}
   .tabs button.on{background:var(--am);color:#1a1300}
   .lrow,.wcard{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#0f1622;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;margin:5px 0}
-  .lrow .ar button{min-height:26px;padding:2px 8px;margin-right:2px}
+  .lrow .ar button{min-height:26px;padding:2px 8px;margin-inline-end:2px}
   .sym{font-weight:800;font-size:15px;border-radius:6px;padding:3px 8px;background:var(--bd);color:var(--tx)}
   .sym.rdy{background:var(--gr);color:#04210f}
   .ln{display:flex;gap:6px;align-items:center;width:100%;flex-wrap:wrap}
@@ -57,6 +59,7 @@
   .tm{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--am)}
   .adj{display:flex;gap:4px}
   .adj button,.ln button.s{min-height:30px;padding:3px 8px;font-size:12px;background:var(--bd);color:var(--tx)}
+  .chip{display:inline-flex;gap:2px}
   .foot{margin-top:14px;text-align:center}
   .link{background:none;color:var(--mu);text-decoration:underline;font-weight:600}
   video{width:140px;background:#000;border-radius:6px}
@@ -65,10 +68,11 @@
 <body>
 <main>
   <div class="top">
-    <span class="pill" id="net">Connecting</span>
-    <label class="pill">Room <input id="room" maxlength="10" aria-label="Room code"></label>
-    <span class="pill" id="sync">clock --</span>
-    <button class="mini alt" id="sound">Sound off</button>
+    <span class="pill" id="net"></span>
+    <label class="pill"><span data-i="room"></span> <input id="room" maxlength="10" data-al="room"></label>
+    <span class="pill" id="sync"></span>
+    <button class="mini alt" id="sound"></button>
+    <select id="lang" data-al="language"></select>
   </div>
   <div id="note" role="status"></div>
 
@@ -85,26 +89,26 @@
   </div>
 
   <div class="row">
-    <button id="pop">Pop out overlay</button>
-    <button id="wake" class="alt">Keep screen awake</button>
+    <button id="pop" data-i="popBtn"></button>
+    <button id="wake" class="alt"></button>
   </div>
 
   <section class="card" id="me">
     <div class="mut" id="meInfo"></div>
     <div class="row tight">
-      <span class="mut" id="meLbl">March</span><span class="sp"></span>
+      <span class="mut" id="meLbl"></span><span class="sp"></span>
       <div class="adj">
         <button class="alt s mini" data-n="-1">−1</button><button class="alt s mini" data-n="-0.1">−.1</button>
-        <b id="meMar" style="min-width:44px;text-align:center">--</b>
+        <b id="meMar" style="min-width:44px;text-align:center;direction:ltr">--</b>
         <button class="alt s mini" data-n="0.1">+.1</button><button class="alt s mini" data-n="1">+1</button>
       </div>
     </div>
-    <button class="alt mini" id="resetMe">↺ Leave and start fresh</button>
+    <button class="alt mini" id="resetMe" data-i="resetMe"></button>
   </section>
 
   <div class="foot">
-    <button class="link" id="adminBtn">Admin</button>
-    <div class="mut" style="margin-top:8px">Pop-out preview</div>
+    <button class="link" id="adminBtn" data-i="adminLink"></button>
+    <div class="mut" style="margin-top:8px" data-i="popPreview"></div>
     <video id="vid" muted playsinline autoplay></video>
   </div>
 </main>
@@ -124,7 +128,197 @@ const firebaseConfig = {
   appId: "1:589173582236:web:d46ab78f84efab569c4059"
 };
 /* CHANGE THIS before you share the link. */
-const ADMIN_PASSWORD = 'MADNESS';
+const ADMIN_PASSWORD = 'CHANGE-ME';
+
+/* ================= TRANSLATIONS =================
+   To fix a phrase, edit it here. {name} parts are filled in by the app. */
+const LANGS = { en: 'English', fr: 'Français', es: 'Español', ar: 'العربية', ko: '한국어', ja: '日本語' };
+const VOICE = { en: 'en-US', fr: 'fr-FR', es: 'es-ES', ar: 'ar-SA', ko: 'ko-KR', ja: 'ja-JP' };
+const L = {
+en: {
+ back:'◂', language:'Language', live:'Live', offline:'Offline', connecting:'Connecting…', room:'Room', clockPill:'clock ±{n}ms', clockNone:'clock --',
+ soundOff:'Sound off', soundOn:'Sound on', popBtn:'Pop out overlay', wakeBtn:'Keep screen awake', wakeOn:'Screen kept awake', popPreview:'Pop-out preview', adminLink:'Admin',
+ resetMe:'↺ Leave and start fresh', resetConfirm:'Leave and clear your role, symbol and march?', marchTarget:'March to target', marchCenter:'March to center',
+ roleLead:'Rally lead {sym}', roleJoin:'Rally joiner', noRole:'No role yet', adminSuffix:' · admin',
+ errRules:'Firestore blocked the request. Check the security rules.', errAuth:'Turn on Anonymous sign-in in Firebase Authentication.', errGeneric:'Error: {m}',
+ noteMarchFirst:'Enter a march time first.', noteConfirmFirst:'Confirm leaders first.', noteNoLeaders:'No leaders yet.', noteTypeTimer:'Type the timer shown in the game.',
+ noteLimit:'Six attacks is the limit. Clear one first.', noteTaken:'Another admin is active.', noteTookOver:'Another admin took over.',
+ noteWakeNo:'Keep awake is not supported here.', noteWakeRef:'Keep awake refused: {m}', notePopRef:'Pop-out refused: {m}', notePopTap:'Pop-out refused: {m} Tap again.', notePopNone:'This browser has no pop-out.',
+ chooseRole:'Choose your role', lead:'LEAD', join:'JOIN', leadEntry:'Rally lead · symbol + march', symErr:'Symbol must be 2 characters', marErr:'Enter your march time', symTaken:'Symbol taken',
+ ok:'OK', editBtn:'◂ edit', waitingAdmin:'Waiting for admin', standingBy:'Standing by', wait:'WAIT', standby:'STANDBY', readyCheck:'Ready check', ready:'READY', readyDone:'READY ✓',
+ waitOthers:'waiting for the others', notInOp:'Not in this op', missed:'MISSED', waitNext:'wait for the next one', cdLabel:'Rally timer starting in', launchIn:'{sym} launch in',
+ send:'SEND', rallyRunning:'Rally running', launched:'LAUNCHED', doneLbl:'Done', DONE:'DONE', waitAdminSub:'wait for the admin', joinWait:'Waiting for leaders', pickRally:'Pick your rally',
+ joiningMarch:'Joining {sym} · your march', joining:'Joining {sym}', rallyNot:'rally not started yet', rallyStarted:'RALLY STARTED', joinNow:'JOIN NOW', readyQ:'READY?',
+ marchSub:'march {t}', changeBtn:'◂ change', cdSub:'rally timer starting', say_send:'Send', say_join:'Rally started. Join now.', say_sound:'Sound is on',
+ centerMarch:'center march {t}', defense:'Defense', sendIn:'{l} · send in', thenGap:' · then {s}s', allSent:'All sent', checkRatios:'Check troop ratios', editMarch:'✎ march',
+ modeChange:'MODE CHANGE', modeDef:'DEFENSE', modeAtk:'ATTACK',
+ admin:'ADMIN', logout:'Log out', tabAtk:'1 · RALLY ATTACK', tabDef:'2 · DEFENSE', modeConfirm:'Switch to {m} mode? All players get a notice. Roles and marches are kept.',
+ modeNameAtk:'RALLY ATTACK', modeNameDef:'DEFENSE', pw:'Admin password', login:'Log in', wrongPw:'Wrong password',
+ defaultPw:'Default password is still in use. Edit ADMIN_PASSWORD in index.html.', leadersJoiners:'Leaders {a} · Joiners {b}', confirmLeaders:'CONFIRM LEADERS', leadersLocked:'LEADERS LOCKED',
+ hitOrder:'HIT ORDER · FIRST HIT ON TOP', joinedN:'{n} joined', noLeadersMsg:'No leaders yet. Share the link and ask leaders to pick LEAD.', leadBuffer:'Lead buffer',
+ readyCheckBtn:'READY CHECK', startNow:'START NOW', reset:'RESET', resetOpConfirm:'Reset the op? Leaders and joiners go back and re-enter.',
+ offsetsNote:'Offsets: 0.1 s apart, last rally +0.4 s. Change any with − and +.', startsT:'starts {t}', tMinus:'T−{t}', launchedLbl:'launched',
+ stStarting:'Starting in {n}', stRunning:'Rally op running', stReadyWait:'Ready check: waiting for leaders', stConfirmed:'Leaders confirmed', stCollecting:'Collecting leaders', moveUp:'Move up', moveDown:'Move down',
+ known:'KNOWN ENEMIES · TAP TO FILL', knownNone:'None yet. New names start at 0:30.', newAttack:'NEW ATTACK', namePh:'NAME', marchWord:'march', rally5:'RALLY 5:00', alreadyMarching:'ALREADY MARCHING',
+ timerInGame:'timer in game', syncBtn:'SYNC', resyncBtn:'RESYNC', timeline:'TIMELINE', noAttacks:'No incoming attacks.', landPlus:'land +', gapLbl:'gap {a} → {b} {s} s',
+ clearAll:'Clear all', clearAllConfirm:'Clear all incoming attacks?', rallyW:'RALLY', marchW:'MARCH', landedW:'LANDED', removeBtn:'REMOVE',
+ resetDef:'RESET DEFENSE', resetDefConfirm:'Reset defense? This clears every attack and the sync bar. Known enemies are kept.', forgetAll:'Forget all', forgetAllConfirm:'Forget all known enemies?', forgetOne:'Forget {n}'
+},
+fr: {
+ back:'◂', language:'Langue', live:'En ligne', offline:'Hors ligne', connecting:'Connexion…', room:'Salle', clockPill:'horloge ±{n} ms', clockNone:'horloge --',
+ soundOff:'Son coupé', soundOn:'Son activé', popBtn:'Afficher en surimpression', wakeBtn:'Garder l’écran allumé', wakeOn:'Écran maintenu allumé', popPreview:'Aperçu de la surimpression', adminLink:'Admin',
+ resetMe:'↺ Quitter et recommencer', resetConfirm:'Quitter et effacer votre rôle, symbole et temps de marche ?', marchTarget:'Temps de marche vers la cible', marchCenter:'Temps de marche vers le centre',
+ roleLead:'Chef de rallye {sym}', roleJoin:'Participant au rallye', noRole:'Pas encore de rôle', adminSuffix:' · admin',
+ errRules:'Firestore a bloqué la requête. Vérifiez les règles de sécurité.', errAuth:'Activez la connexion anonyme dans Firebase Authentication.', errGeneric:'Erreur : {m}',
+ noteMarchFirst:'Saisissez d’abord un temps de marche.', noteConfirmFirst:'Confirmez d’abord les chefs.', noteNoLeaders:'Aucun chef pour l’instant.', noteTypeTimer:'Saisissez le minuteur affiché dans le jeu.',
+ noteLimit:'Six attaques maximum. Supprimez-en une d’abord.', noteTaken:'Un autre admin est actif.', noteTookOver:'Un autre admin a pris la main.',
+ noteWakeNo:'Maintien de l’écran non pris en charge ici.', noteWakeRef:'Maintien de l’écran refusé : {m}', notePopRef:'Surimpression refusée : {m}', notePopTap:'Surimpression refusée : {m} Appuyez à nouveau.', notePopNone:'Ce navigateur ne gère pas la surimpression.',
+ chooseRole:'Choisissez votre rôle', lead:'CHEF', join:'REJOINDRE', leadEntry:'Chef de rallye · symbole + marche', symErr:'Le symbole doit faire 2 caractères', marErr:'Saisissez votre temps de marche', symTaken:'Symbole déjà pris',
+ ok:'OK', editBtn:'◂ modifier', waitingAdmin:'En attente de l’admin', standingBy:'En attente', wait:'ATTENDEZ', standby:'EN VEILLE', readyCheck:'Vérification', ready:'PRÊT', readyDone:'PRÊT ✓',
+ waitOthers:'en attente des autres', notInOp:'Hors de cette opération', missed:'RATÉ', waitNext:'attendez la prochaine', cdLabel:'Le rallye démarre dans', launchIn:'{sym} lancement dans',
+ send:'ENVOI', rallyRunning:'Rallye en cours', launched:'LANCÉ', doneLbl:'Terminé', DONE:'FINI', waitAdminSub:'attendez l’admin', joinWait:'En attente des chefs', pickRally:'Choisissez votre rallye',
+ joiningMarch:'Rejoint {sym} · votre marche', joining:'Rejoint {sym}', rallyNot:'le rallye n’a pas démarré', rallyStarted:'RALLYE LANCÉ', joinNow:'REJOIGNEZ !', readyQ:'PRÊT ?',
+ marchSub:'marche {t}', changeBtn:'◂ changer', cdSub:'le rallye démarre', say_send:'Envoyez', say_join:'Rallye lancé. Rejoignez maintenant.', say_sound:'Le son est activé',
+ centerMarch:'marche centre {t}', defense:'Défense', sendIn:'{l} · envoi dans', thenGap:' · puis {s} s', allSent:'Tout envoyé', checkRatios:'Vérifiez les ratios de troupes', editMarch:'✎ marche',
+ modeChange:'CHANGEMENT DE MODE', modeDef:'DÉFENSE', modeAtk:'ATTAQUE',
+ admin:'ADMIN', logout:'Déconnexion', tabAtk:'1 · ATTAQUE DE RALLYE', tabDef:'2 · DÉFENSE', modeConfirm:'Passer en mode {m} ? Tous les joueurs seront prévenus. Les rôles et marches sont conservés.',
+ modeNameAtk:'ATTAQUE DE RALLYE', modeNameDef:'DÉFENSE', pw:'Mot de passe admin', login:'Connexion', wrongPw:'Mot de passe incorrect',
+ defaultPw:'Le mot de passe par défaut est encore utilisé. Modifiez ADMIN_PASSWORD dans index.html.', leadersJoiners:'Chefs {a} · Participants {b}', confirmLeaders:'CONFIRMER LES CHEFS', leadersLocked:'CHEFS VERROUILLÉS',
+ hitOrder:'ORDRE D’IMPACT · PREMIER IMPACT EN HAUT', joinedN:'{n} inscrits', noLeadersMsg:'Aucun chef pour l’instant. Partagez le lien et demandez aux chefs de choisir CHEF.', leadBuffer:'Marge de lancement',
+ readyCheckBtn:'VÉRIFICATION', startNow:'DÉMARRER', reset:'RÉINITIALISER', resetOpConfirm:'Réinitialiser l’opération ? Chefs et participants repartent de zéro.',
+ offsetsNote:'Décalages : 0,1 s entre rallyes, dernier rallye +0,4 s. Modifiez avec − et +.', startsT:'départ {t}', tMinus:'T−{t}', launchedLbl:'lancé',
+ stStarting:'Démarrage dans {n}', stRunning:'Opération en cours', stReadyWait:'Vérification : en attente des chefs', stConfirmed:'Chefs confirmés', stCollecting:'Collecte des chefs', moveUp:'Monter', moveDown:'Descendre',
+ known:'ENNEMIS CONNUS · APPUYEZ POUR REMPLIR', knownNone:'Aucun pour l’instant. Les nouveaux noms démarrent à 0:30.', newAttack:'NOUVELLE ATTAQUE', namePh:'NOM', marchWord:'marche', rally5:'RALLYE 5:00', alreadyMarching:'DÉJÀ EN MARCHE',
+ timerInGame:'minuteur du jeu', syncBtn:'SYNCHRO', resyncBtn:'RESYNCHRO', timeline:'CHRONOLOGIE', noAttacks:'Aucune attaque entrante.', landPlus:'impact +', gapLbl:'écart {a} → {b} {s} s',
+ clearAll:'Tout effacer', clearAllConfirm:'Effacer toutes les attaques entrantes ?', rallyW:'RALLYE', marchW:'MARCHE', landedW:'ARRIVÉ', removeBtn:'SUPPRIMER',
+ resetDef:'RÉINITIALISER LA DÉFENSE', resetDefConfirm:'Réinitialiser la défense ? Cela efface toutes les attaques et la barre de synchro. Les ennemis connus sont conservés.', forgetAll:'Tout oublier', forgetAllConfirm:'Oublier tous les ennemis connus ?', forgetOne:'Oublier {n}'
+},
+es: {
+ back:'◂', language:'Idioma', live:'En línea', offline:'Sin conexión', connecting:'Conectando…', room:'Sala', clockPill:'reloj ±{n} ms', clockNone:'reloj --',
+ soundOff:'Sonido apagado', soundOn:'Sonido activado', popBtn:'Mostrar superposición', wakeBtn:'Mantener pantalla encendida', wakeOn:'Pantalla encendida', popPreview:'Vista previa de la superposición', adminLink:'Admin',
+ resetMe:'↺ Salir y empezar de nuevo', resetConfirm:'¿Salir y borrar tu rol, símbolo y marcha?', marchTarget:'Marcha al objetivo', marchCenter:'Marcha al centro',
+ roleLead:'Líder de rally {sym}', roleJoin:'Participante del rally', noRole:'Aún sin rol', adminSuffix:' · admin',
+ errRules:'Firestore bloqueó la solicitud. Revisa las reglas de seguridad.', errAuth:'Activa el inicio de sesión anónimo en Firebase Authentication.', errGeneric:'Error: {m}',
+ noteMarchFirst:'Introduce primero un tiempo de marcha.', noteConfirmFirst:'Confirma primero a los líderes.', noteNoLeaders:'Aún no hay líderes.', noteTypeTimer:'Escribe el temporizador que muestra el juego.',
+ noteLimit:'El límite es de seis ataques. Borra uno primero.', noteTaken:'Otro admin está activo.', noteTookOver:'Otro admin tomó el control.',
+ noteWakeNo:'Mantener pantalla encendida no es compatible aquí.', noteWakeRef:'Pantalla encendida rechazada: {m}', notePopRef:'Superposición rechazada: {m}', notePopTap:'Superposición rechazada: {m} Vuelve a tocar.', notePopNone:'Este navegador no admite superposición.',
+ chooseRole:'Elige tu rol', lead:'LÍDER', join:'UNIRSE', leadEntry:'Líder de rally · símbolo + marcha', symErr:'El símbolo debe tener 2 caracteres', marErr:'Introduce tu tiempo de marcha', symTaken:'Símbolo ocupado',
+ ok:'OK', editBtn:'◂ editar', waitingAdmin:'Esperando al admin', standingBy:'En espera', wait:'ESPERA', standby:'EN ESPERA', readyCheck:'Comprobación', ready:'LISTO', readyDone:'LISTO ✓',
+ waitOthers:'esperando a los demás', notInOp:'No estás en esta operación', missed:'PERDIDO', waitNext:'espera la siguiente', cdLabel:'El rally empieza en', launchIn:'{sym} lanza en',
+ send:'ENVÍA', rallyRunning:'Rally en curso', launched:'LANZADO', doneLbl:'Hecho', DONE:'HECHO', waitAdminSub:'espera al admin', joinWait:'Esperando a los líderes', pickRally:'Elige tu rally',
+ joiningMarch:'Uniéndote a {sym} · tu marcha', joining:'Uniéndote a {sym}', rallyNot:'el rally aún no ha empezado', rallyStarted:'RALLY INICIADO', joinNow:'¡ÚNETE YA!', readyQ:'¿LISTO?',
+ marchSub:'marcha {t}', changeBtn:'◂ cambiar', cdSub:'el rally empieza', say_send:'Envía', say_join:'Rally iniciado. Únete ahora.', say_sound:'El sonido está activado',
+ centerMarch:'marcha al centro {t}', defense:'Defensa', sendIn:'{l} · envía en', thenGap:' · luego {s} s', allSent:'Todo enviado', checkRatios:'Revisa las proporciones de tropas', editMarch:'✎ marcha',
+ modeChange:'CAMBIO DE MODO', modeDef:'DEFENSA', modeAtk:'ATAQUE',
+ admin:'ADMIN', logout:'Cerrar sesión', tabAtk:'1 · ATAQUE DE RALLY', tabDef:'2 · DEFENSA', modeConfirm:'¿Cambiar al modo {m}? Todos los jugadores recibirán un aviso. Se conservan roles y marchas.',
+ modeNameAtk:'ATAQUE DE RALLY', modeNameDef:'DEFENSA', pw:'Contraseña de admin', login:'Entrar', wrongPw:'Contraseña incorrecta',
+ defaultPw:'Sigue activa la contraseña por defecto. Edita ADMIN_PASSWORD en index.html.', leadersJoiners:'Líderes {a} · Participantes {b}', confirmLeaders:'CONFIRMAR LÍDERES', leadersLocked:'LÍDERES BLOQUEADOS',
+ hitOrder:'ORDEN DE IMPACTO · PRIMER IMPACTO ARRIBA', joinedN:'{n} unidos', noLeadersMsg:'Aún no hay líderes. Comparte el enlace y pide que elijan LÍDER.', leadBuffer:'Margen inicial',
+ readyCheckBtn:'COMPROBAR LISTOS', startNow:'EMPEZAR YA', reset:'REINICIAR', resetOpConfirm:'¿Reiniciar la operación? Líderes y participantes vuelven a introducir sus datos.',
+ offsetsNote:'Desfases: 0,1 s entre rallies, el último +0,4 s. Cambia cualquiera con − y +.', startsT:'sale {t}', tMinus:'T−{t}', launchedLbl:'lanzado',
+ stStarting:'Empieza en {n}', stRunning:'Operación en curso', stReadyWait:'Comprobación: esperando a los líderes', stConfirmed:'Líderes confirmados', stCollecting:'Recopilando líderes', moveUp:'Subir', moveDown:'Bajar',
+ known:'ENEMIGOS CONOCIDOS · TOCA PARA RELLENAR', knownNone:'Ninguno aún. Los nombres nuevos empiezan en 0:30.', newAttack:'NUEVO ATAQUE', namePh:'NOMBRE', marchWord:'marcha', rally5:'RALLY 5:00', alreadyMarching:'YA EN MARCHA',
+ timerInGame:'temporizador del juego', syncBtn:'SINCRONIZAR', resyncBtn:'RESINCRONIZAR', timeline:'LÍNEA DE TIEMPO', noAttacks:'No hay ataques entrantes.', landPlus:'impacto +', gapLbl:'intervalo {a} → {b} {s} s',
+ clearAll:'Borrar todo', clearAllConfirm:'¿Borrar todos los ataques entrantes?', rallyW:'RALLY', marchW:'MARCHA', landedW:'IMPACTÓ', removeBtn:'QUITAR',
+ resetDef:'REINICIAR DEFENSA', resetDefConfirm:'¿Reiniciar la defensa? Se borran todos los ataques y la barra de sincronización. Se conservan los enemigos conocidos.', forgetAll:'Olvidar todos', forgetAllConfirm:'¿Olvidar todos los enemigos conocidos?', forgetOne:'Olvidar {n}'
+},
+ar: {
+ back:'▸', language:'اللغة', live:'متصل', offline:'غير متصل', connecting:'جارٍ الاتصال…', room:'الغرفة', clockPill:'الساعة ±{n} مللي ث', clockNone:'الساعة --',
+ soundOff:'الصوت متوقف', soundOn:'الصوت مفعّل', popBtn:'عرض النافذة العائمة', wakeBtn:'إبقاء الشاشة مضاءة', wakeOn:'الشاشة مضاءة', popPreview:'معاينة النافذة العائمة', adminLink:'المسؤول',
+ resetMe:'↺ المغادرة والبدء من جديد', resetConfirm:'هل تريد المغادرة ومسح دورك ورمزك ووقت مسيرك؟', marchTarget:'وقت المسير إلى الهدف', marchCenter:'وقت المسير إلى المركز',
+ roleLead:'قائد التجمع {sym}', roleJoin:'منضم إلى التجمع', noRole:'لا يوجد دور بعد', adminSuffix:' · مسؤول',
+ errRules:'منع Firestore الطلب. تحقق من قواعد الأمان.', errAuth:'فعّل تسجيل الدخول المجهول في Firebase Authentication.', errGeneric:'خطأ: {m}',
+ noteMarchFirst:'أدخل وقت المسير أولاً.', noteConfirmFirst:'أكّد القادة أولاً.', noteNoLeaders:'لا يوجد قادة بعد.', noteTypeTimer:'اكتب المؤقت الظاهر في اللعبة.',
+ noteLimit:'الحد الأقصى ست هجمات. احذف واحدة أولاً.', noteTaken:'مسؤول آخر نشط.', noteTookOver:'تولى مسؤول آخر المهمة.',
+ noteWakeNo:'إبقاء الشاشة مضاءة غير مدعوم هنا.', noteWakeRef:'رُفض إبقاء الشاشة مضاءة: {m}', notePopRef:'رُفضت النافذة العائمة: {m}', notePopTap:'رُفضت النافذة العائمة: {m} اضغط مرة أخرى.', notePopNone:'هذا المتصفح لا يدعم النافذة العائمة.',
+ chooseRole:'اختر دورك', lead:'قائد', join:'انضمام', leadEntry:'قائد التجمع · الرمز + وقت المسير', symErr:'يجب أن يتكون الرمز من حرفين', marErr:'أدخل وقت المسير', symTaken:'الرمز مستخدم',
+ ok:'موافق', editBtn:'▸ تعديل', waitingAdmin:'بانتظار المسؤول', standingBy:'في الانتظار', wait:'انتظر', standby:'استعداد', readyCheck:'فحص الجاهزية', ready:'جاهز', readyDone:'جاهز ✓',
+ waitOthers:'بانتظار الآخرين', notInOp:'لست ضمن هذه العملية', missed:'فاتك', waitNext:'انتظر العملية التالية', cdLabel:'يبدأ مؤقت التجمع خلال', launchIn:'{sym} الانطلاق خلال',
+ send:'أرسل', rallyRunning:'التجمع جارٍ', launched:'انطلق', doneLbl:'انتهى', DONE:'تم', waitAdminSub:'انتظر المسؤول', joinWait:'بانتظار القادة', pickRally:'اختر تجمعك',
+ joiningMarch:'الانضمام إلى {sym} · وقت مسيرك', joining:'الانضمام إلى {sym}', rallyNot:'لم يبدأ التجمع بعد', rallyStarted:'بدأ التجمع', joinNow:'انضم الآن', readyQ:'جاهز؟',
+ marchSub:'المسير {t}', changeBtn:'▸ تغيير', cdSub:'يبدأ التجمع', say_send:'أرسل', say_join:'بدأ التجمع. انضم الآن.', say_sound:'الصوت مفعّل',
+ centerMarch:'مسير المركز {t}', defense:'الدفاع', sendIn:'{l} · الإرسال خلال', thenGap:' · ثم {s} ث', allSent:'تم إرسال الكل', checkRatios:'راجع نسب القوات', editMarch:'✎ وقت المسير',
+ modeChange:'تغيير الوضع', modeDef:'الدفاع', modeAtk:'الهجوم',
+ admin:'المسؤول', logout:'تسجيل الخروج', tabAtk:'1 · هجوم التجمع', tabDef:'2 · الدفاع', modeConfirm:'التبديل إلى وضع {m}؟ سيتلقى جميع اللاعبين إشعاراً. تُحفظ الأدوار وأوقات المسير.',
+ modeNameAtk:'هجوم التجمع', modeNameDef:'الدفاع', pw:'كلمة مرور المسؤول', login:'دخول', wrongPw:'كلمة المرور خاطئة',
+ defaultPw:'ما زالت كلمة المرور الافتراضية مستخدمة. عدّل ADMIN_PASSWORD في index.html.', leadersJoiners:'القادة {a} · المنضمون {b}', confirmLeaders:'تأكيد القادة', leadersLocked:'تم قفل القادة',
+ hitOrder:'ترتيب الضربات · الضربة الأولى في الأعلى', joinedN:'انضم {n}', noLeadersMsg:'لا يوجد قادة بعد. شارك الرابط واطلب من القادة اختيار قائد.', leadBuffer:'مهلة البدء',
+ readyCheckBtn:'فحص الجاهزية', startNow:'ابدأ الآن', reset:'إعادة ضبط', resetOpConfirm:'إعادة ضبط العملية؟ يعود القادة والمنضمون ويُدخلون بياناتهم من جديد.',
+ offsetsNote:'الفروق: 0.1 ث بين التجمعات، والأخير +0.4 ث. غيّرها بـ − و +.', startsT:'يبدأ {t}', tMinus:'T−{t}', launchedLbl:'انطلق',
+ stStarting:'البدء خلال {n}', stRunning:'العملية جارية', stReadyWait:'فحص الجاهزية: بانتظار القادة', stConfirmed:'تم تأكيد القادة', stCollecting:'جارٍ جمع القادة', moveUp:'أعلى', moveDown:'أسفل',
+ known:'الأعداء المعروفون · اضغط للتعبئة', knownNone:'لا يوجد بعد. الأسماء الجديدة تبدأ من 0:30.', newAttack:'هجوم جديد', namePh:'الاسم', marchWord:'المسير', rally5:'تجمع 5:00', alreadyMarching:'يسير بالفعل',
+ timerInGame:'مؤقت اللعبة', syncBtn:'مزامنة', resyncBtn:'إعادة مزامنة', timeline:'الجدول الزمني', noAttacks:'لا توجد هجمات قادمة.', landPlus:'الوصول +', gapLbl:'الفارق {a} → {b} {s} ث',
+ clearAll:'مسح الكل', clearAllConfirm:'هل تريد مسح كل الهجمات القادمة؟', rallyW:'تجمع', marchW:'مسير', landedW:'وصل', removeBtn:'إزالة',
+ resetDef:'إعادة ضبط الدفاع', resetDefConfirm:'إعادة ضبط الدفاع؟ سيُمسح كل الهجمات وشريط المزامنة. يبقى الأعداء المعروفون.', forgetAll:'نسيان الكل', forgetAllConfirm:'هل تريد نسيان كل الأعداء المعروفين؟', forgetOne:'نسيان {n}'
+},
+ko: {
+ back:'◂', language:'언어', live:'연결됨', offline:'오프라인', connecting:'연결 중…', room:'방', clockPill:'시계 ±{n}ms', clockNone:'시계 --',
+ soundOff:'소리 꺼짐', soundOn:'소리 켜짐', popBtn:'오버레이 띄우기', wakeBtn:'화면 켜짐 유지', wakeOn:'화면 켜짐 유지 중', popPreview:'오버레이 미리보기', adminLink:'관리자',
+ resetMe:'↺ 나가기 및 처음부터', resetConfirm:'나가고 역할, 기호, 행군 시간을 지울까요?', marchTarget:'목표까지 행군 시간', marchCenter:'중심까지 행군 시간',
+ roleLead:'집결 리더 {sym}', roleJoin:'집결 참가자', noRole:'아직 역할 없음', adminSuffix:' · 관리자',
+ errRules:'Firestore가 요청을 차단했습니다. 보안 규칙을 확인하세요.', errAuth:'Firebase Authentication에서 익명 로그인을 켜세요.', errGeneric:'오류: {m}',
+ noteMarchFirst:'먼저 행군 시간을 입력하세요.', noteConfirmFirst:'먼저 리더를 확정하세요.', noteNoLeaders:'아직 리더가 없습니다.', noteTypeTimer:'게임에 표시된 타이머를 입력하세요.',
+ noteLimit:'공격은 최대 6개입니다. 먼저 하나를 지우세요.', noteTaken:'다른 관리자가 활성 상태입니다.', noteTookOver:'다른 관리자가 넘겨받았습니다.',
+ noteWakeNo:'여기서는 화면 켜짐 유지를 지원하지 않습니다.', noteWakeRef:'화면 켜짐 유지 거부됨: {m}', notePopRef:'오버레이 거부됨: {m}', notePopTap:'오버레이 거부됨: {m} 다시 누르세요.', notePopNone:'이 브라우저는 오버레이를 지원하지 않습니다.',
+ chooseRole:'역할을 선택하세요', lead:'리더', join:'참가', leadEntry:'집결 리더 · 기호 + 행군 시간', symErr:'기호는 2자여야 합니다', marErr:'행군 시간을 입력하세요', symTaken:'이미 사용 중인 기호',
+ ok:'확인', editBtn:'◂ 수정', waitingAdmin:'관리자 대기 중', standingBy:'대기 중', wait:'대기', standby:'대기 중', readyCheck:'준비 확인', ready:'준비', readyDone:'준비 ✓',
+ waitOthers:'다른 사람 대기 중', notInOp:'이번 작전에 없음', missed:'놓침', waitNext:'다음을 기다리세요', cdLabel:'집결 타이머 시작까지', launchIn:'{sym} 출발까지',
+ send:'출발!', rallyRunning:'집결 진행 중', launched:'출발함', doneLbl:'완료', DONE:'완료', waitAdminSub:'관리자를 기다리세요', joinWait:'리더 대기 중', pickRally:'집결을 선택하세요',
+ joiningMarch:'{sym} 참가 · 내 행군 시간', joining:'{sym} 참가 중', rallyNot:'집결이 아직 시작되지 않음', rallyStarted:'집결 시작', joinNow:'지금 참가!', readyQ:'준비?',
+ marchSub:'행군 {t}', changeBtn:'◂ 변경', cdSub:'집결 시작 중', say_send:'출발', say_join:'집결이 시작되었습니다. 지금 참가하세요.', say_sound:'소리가 켜졌습니다',
+ centerMarch:'중심 행군 {t}', defense:'방어', sendIn:'{l} · 출발까지', thenGap:' · 이후 {s}초', allSent:'모두 출발', checkRatios:'병력 비율을 확인하세요', editMarch:'✎ 행군 시간',
+ modeChange:'모드 전환', modeDef:'방어', modeAtk:'공격',
+ admin:'관리자', logout:'로그아웃', tabAtk:'1 · 집결 공격', tabDef:'2 · 방어', modeConfirm:'{m} 모드로 전환할까요? 모든 플레이어에게 알림이 갑니다. 역할과 행군 시간은 유지됩니다.',
+ modeNameAtk:'집결 공격', modeNameDef:'방어', pw:'관리자 비밀번호', login:'로그인', wrongPw:'비밀번호가 틀렸습니다',
+ defaultPw:'기본 비밀번호를 아직 사용 중입니다. index.html의 ADMIN_PASSWORD를 수정하세요.', leadersJoiners:'리더 {a} · 참가자 {b}', confirmLeaders:'리더 확정', leadersLocked:'리더 확정됨',
+ hitOrder:'타격 순서 · 첫 타격이 맨 위', joinedN:'{n}명 참가', noLeadersMsg:'아직 리더가 없습니다. 링크를 공유하고 리더에게 리더를 선택하라고 하세요.', leadBuffer:'시작 여유',
+ readyCheckBtn:'준비 확인', startNow:'지금 시작', reset:'초기화', resetOpConfirm:'작전을 초기화할까요? 리더와 참가자가 다시 입력해야 합니다.',
+ offsetsNote:'간격: 집결 사이 0.1초, 마지막은 +0.4초. −와 +로 조정하세요.', startsT:'{t} 시작', tMinus:'T−{t}', launchedLbl:'출발함',
+ stStarting:'{n}초 후 시작', stRunning:'집결 작전 진행 중', stReadyWait:'준비 확인: 리더 대기 중', stConfirmed:'리더 확정됨', stCollecting:'리더 모집 중', moveUp:'위로', moveDown:'아래로',
+ known:'알려진 적 · 눌러서 채우기', knownNone:'아직 없음. 새 이름은 0:30으로 시작합니다.', newAttack:'새 공격', namePh:'이름', marchWord:'행군', rally5:'집결 5:00', alreadyMarching:'이미 행군 중',
+ timerInGame:'게임 타이머', syncBtn:'동기화', resyncBtn:'재동기화', timeline:'타임라인', noAttacks:'들어오는 공격 없음.', landPlus:'도착 +', gapLbl:'간격 {a} → {b} {s}초',
+ clearAll:'모두 지우기', clearAllConfirm:'들어오는 공격을 모두 지울까요?', rallyW:'집결', marchW:'행군', landedW:'도착함', removeBtn:'삭제',
+ resetDef:'방어 초기화', resetDefConfirm:'방어를 초기화할까요? 모든 공격과 동기화 입력이 지워집니다. 알려진 적은 유지됩니다.', forgetAll:'모두 잊기', forgetAllConfirm:'알려진 적을 모두 잊을까요?', forgetOne:'{n} 잊기'
+},
+ja: {
+ back:'◂', language:'言語', live:'接続中', offline:'オフライン', connecting:'接続しています…', room:'ルーム', clockPill:'時計 ±{n}ms', clockNone:'時計 --',
+ soundOff:'サウンドオフ', soundOn:'サウンドオン', popBtn:'オーバーレイを表示', wakeBtn:'画面をつけたままにする', wakeOn:'画面を点灯中', popPreview:'オーバーレイのプレビュー', adminLink:'管理者',
+ resetMe:'↺ 退出してやり直す', resetConfirm:'退出して役割・記号・行軍時間を消去しますか？', marchTarget:'目標までの行軍時間', marchCenter:'中心までの行軍時間',
+ roleLead:'集結リーダー {sym}', roleJoin:'集結参加者', noRole:'役割は未設定', adminSuffix:' · 管理者',
+ errRules:'Firestoreがリクエストをブロックしました。セキュリティルールを確認してください。', errAuth:'Firebase Authenticationで匿名ログインを有効にしてください。', errGeneric:'エラー: {m}',
+ noteMarchFirst:'先に行軍時間を入力してください。', noteConfirmFirst:'先にリーダーを確定してください。', noteNoLeaders:'リーダーがまだいません。', noteTypeTimer:'ゲームに表示されているタイマーを入力してください。',
+ noteLimit:'攻撃は最大6件です。先に1件消してください。', noteTaken:'別の管理者が操作中です。', noteTookOver:'別の管理者に引き継がれました。',
+ noteWakeNo:'ここでは画面点灯の維持に対応していません。', noteWakeRef:'画面点灯の維持が拒否されました: {m}', notePopRef:'オーバーレイが拒否されました: {m}', notePopTap:'オーバーレイが拒否されました: {m} もう一度タップしてください。', notePopNone:'このブラウザはオーバーレイに対応していません。',
+ chooseRole:'役割を選んでください', lead:'リーダー', join:'参加', leadEntry:'集結リーダー · 記号 + 行軍時間', symErr:'記号は2文字にしてください', marErr:'行軍時間を入力してください', symTaken:'その記号は使用中です',
+ ok:'OK', editBtn:'◂ 編集', waitingAdmin:'管理者を待っています', standingBy:'待機中', wait:'待機', standby:'待機中', readyCheck:'準備確認', ready:'準備OK', readyDone:'準備OK ✓',
+ waitOthers:'他の人を待っています', notInOp:'この作戦には含まれていません', missed:'見逃し', waitNext:'次をお待ちください', cdLabel:'集結タイマー開始まで', launchIn:'{sym} 出発まで',
+ send:'出発！', rallyRunning:'集結進行中', launched:'出発済み', doneLbl:'完了', DONE:'完了', waitAdminSub:'管理者をお待ちください', joinWait:'リーダーを待っています', pickRally:'集結を選んでください',
+ joiningMarch:'{sym} に参加 · 行軍時間', joining:'{sym} に参加中', rallyNot:'集結はまだ始まっていません', rallyStarted:'集結開始', joinNow:'今すぐ参加！', readyQ:'準備は？',
+ marchSub:'行軍 {t}', changeBtn:'◂ 変更', cdSub:'集結タイマー開始中', say_send:'出発', say_join:'集結が始まりました。今すぐ参加してください。', say_sound:'サウンドがオンになりました',
+ centerMarch:'中心への行軍 {t}', defense:'防衛', sendIn:'{l} · 出発まで', thenGap:' · 次は {s}秒後', allSent:'すべて出発', checkRatios:'兵力の比率を確認してください', editMarch:'✎ 行軍時間',
+ modeChange:'モード切替', modeDef:'防衛', modeAtk:'攻撃',
+ admin:'管理者', logout:'ログアウト', tabAtk:'1 · 集結攻撃', tabDef:'2 · 防衛', modeConfirm:'{m}モードに切り替えますか？全プレイヤーに通知されます。役割と行軍時間は保持されます。',
+ modeNameAtk:'集結攻撃', modeNameDef:'防衛', pw:'管理者パスワード', login:'ログイン', wrongPw:'パスワードが違います',
+ defaultPw:'初期パスワードのままです。index.htmlのADMIN_PASSWORDを編集してください。', leadersJoiners:'リーダー {a} · 参加者 {b}', confirmLeaders:'リーダーを確定', leadersLocked:'リーダー確定済み',
+ hitOrder:'着弾順 · 最初の着弾が一番上', joinedN:'{n}人参加', noLeadersMsg:'リーダーがまだいません。リンクを共有し、リーダーを選んでもらってください。', leadBuffer:'開始までの余裕',
+ readyCheckBtn:'準備確認', startNow:'今すぐ開始', reset:'リセット', resetOpConfirm:'作戦をリセットしますか？リーダーと参加者は入力し直します。',
+ offsetsNote:'間隔: 集結どうし0.1秒、最後は+0.4秒。−と+で調整できます。', startsT:'{t}に開始', tMinus:'T−{t}', launchedLbl:'出発済み',
+ stStarting:'{n}秒後に開始', stRunning:'集結作戦 進行中', stReadyWait:'準備確認: リーダー待ち', stConfirmed:'リーダー確定済み', stCollecting:'リーダー募集中', moveUp:'上へ', moveDown:'下へ',
+ known:'既知の敵 · タップで入力', knownNone:'まだありません。新しい名前は0:30から始まります。', newAttack:'新しい攻撃', namePh:'名前', marchWord:'行軍', rally5:'集結 5:00', alreadyMarching:'すでに行軍中',
+ timerInGame:'ゲームのタイマー', syncBtn:'同期', resyncBtn:'再同期', timeline:'タイムライン', noAttacks:'来襲する攻撃はありません。', landPlus:'着弾 +', gapLbl:'間隔 {a} → {b} {s}秒',
+ clearAll:'すべて消去', clearAllConfirm:'来襲する攻撃をすべて消去しますか？', rallyW:'集結', marchW:'行軍', landedW:'着弾済み', removeBtn:'削除',
+ resetDef:'防衛をリセット', resetDefConfirm:'防衛をリセットしますか？すべての攻撃と同期入力が消えます。既知の敵は残ります。', forgetAll:'すべて忘れる', forgetAllConfirm:'既知の敵をすべて忘れますか？', forgetOne:'{n}を忘れる'
+}
+};
+let lang = 'en';
+try { lang = localStorage.getItem('tacsync_lang') || (navigator.language || 'en').slice(0, 2).toLowerCase(); } catch (e) {}
+if (!LANGS[lang]) lang = 'en';
+function tr(k, p){
+  const d = L[lang];
+  let s = d && d[k] != null ? d[k] : (L.en[k] != null ? L.en[k] : k);
+  if (p) for (const x in p) s = s.split('{' + x + '}').join(p[x]);
+  return s;
+}
 
 //#PURE-START
 function parseMS(t){
@@ -208,7 +402,7 @@ $('room').value = roomKey.slice(1);
 
 /* ---------- state ---------- */
 let app, auth, db, uid = null, D = null, unsub = null, live = false;
-let offset = 0, rttMs = null;
+let offset = 0, rttMs = null, netState = 'connecting', wake = null;
 let isAdmin = false, hbTimer = null, starting = false;
 let lastMode = null, modeBannerUntil = 0, lastKey = null;
 const ui = { editing: false, pendingRally: null, editD: false };
@@ -220,11 +414,37 @@ const roomRef = () => doc(db, 'rooms', roomKey);
 function note(msg, keep){ $('note').textContent = msg || ''; if (msg && !keep) setTimeout(() => { if ($('note').textContent === msg) $('note').textContent = ''; }, 6000); }
 function fail(e){
   const c = (e && e.code) || '';
-  if (c.includes('permission')) note('Firestore blocked the request. Check the security rules.', true);
-  else if (c.includes('operation-not-allowed') || c.includes('admin-restricted')) note('Turn on Anonymous sign-in in Firebase Authentication.', true);
-  else note('Error: ' + (e && e.message ? e.message : e), true);
+  if (c.includes('permission')) note(tr('errRules'), true);
+  else if (c.includes('operation-not-allowed') || c.includes('admin-restricted')) note(tr('errAuth'), true);
+  else note(tr('errGeneric', { m: e && e.message ? e.message : e }), true);
 }
 const upd = obj => updateDoc(roomRef(), obj).catch(fail);
+
+/* ---------- language ---------- */
+function refreshStatic(){
+  $('net').textContent = tr(netState === 'live' ? 'live' : netState === 'off' ? 'offline' : 'connecting');
+  $('net').className = 'pill ' + (netState === 'live' ? 'live' : netState === 'off' ? 'off' : '');
+  $('sync').textContent = rttMs == null ? tr('clockNone') : tr('clockPill', { n: Math.round(rttMs / 2) });
+  $('sound').textContent = tr(soundOn ? 'soundOn' : 'soundOff');
+  $('wake').textContent = tr(wake && !wake.released ? 'wakeOn' : 'wakeBtn');
+}
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i]').forEach(el => { el.textContent = tr(el.dataset.i); });
+  document.querySelectorAll('[data-al]').forEach(el => { el.setAttribute('aria-label', tr(el.dataset.al)); });
+  const sel = $('lang');
+  if (!sel.options.length) Object.keys(LANGS).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = LANGS[k]; sel.append(o); });
+  sel.value = lang;
+  refreshStatic();
+}
+$('lang').onchange = e => {
+  lang = e.target.value; try { localStorage.setItem('tacsync_lang', lang); } catch (x) {}
+  applyLang(); invalidate();
+  if (isAdmin){ adminSec.innerHTML = skel(); renderAdmin(); }
+  else if (adminSec.querySelector('#pw')) loginForm();
+  tick();
+};
 
 /* ---------- doc helpers ---------- */
 function initialDoc(){
@@ -274,6 +494,7 @@ async function syncClock(){
     } catch (e) { return; }
   }
   if (best){ offset = rttMs == null ? best.off : offset * 0.5 + best.off * 0.5; rttMs = best.rtt; }
+  refreshStatic();
 }
 
 /* ---------- audio ---------- */
@@ -283,7 +504,12 @@ function beep(f, ms){
   o.frequency.value = f; v.gain.value = 0.2; o.connect(v); v.connect(actx.destination);
   o.start(); o.stop(actx.currentTime + ms / 1000);
 }
-function say(t){ if (soundOn && 'speechSynthesis' in window){ speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(t)); } }
+function say(text){
+  if (soundOn && 'speechSynthesis' in window){
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang = VOICE[lang] || 'en-US'; speechSynthesis.speak(u);
+  }
+}
 function cue(key, f, ms, text, vib){
   if (fired.has(key)) return; fired.add(key);
   beep(f, ms); if (text) say(text);
@@ -291,85 +517,85 @@ function cue(key, f, ms, text, vib){
 }
 $('sound').onclick = () => {
   actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume();
-  soundOn = true; beep(660, 150); say('Sound is on'); $('sound').textContent = 'Sound on';
+  soundOn = true; beep(660, 150); say(tr('say_sound')); refreshStatic();
 };
 
 /* ---------- views ---------- */
 const V = (key, o) => Object.assign({ key: key, cls: 'idle', label: '', time: '', sub: '', ctrl: '', cnt: null, rem: null, go: false, cid: key }, o);
 const btn = (act, txt, cls, extra) => '<button class="' + (cls || '') + '" data-act="' + act + '" ' + (extra || '') + '>' + txt + '</button>';
 
-function marchInput(v){ return '<input id="inMar" class="wide" inputmode="numeric" placeholder="0:45" value="' + (v == null ? '' : fmtMS(v)) + '" aria-label="March time">'; }
+function marchInput(v){ return '<input id="inMar" class="wide" inputmode="numeric" placeholder="0:45" value="' + (v == null ? '' : fmtMS(v)) + '" aria-label="' + esc(tr('marchTarget')) + '">'; }
 
 function attackView(t){
   const A = D.attack, ep = epoch(), me = (D.players || {})[uid], reg = me && me.ep === ep;
-  if (!prof.role) return V('role', { label: 'Choose your role', ctrl: btn('role-lead', 'LEAD') + btn('role-join', 'JOIN', 'alt') });
-  const plan = A.plan;
+  if (!prof.role) return V('role:' + lang, { label: tr('chooseRole'), ctrl: btn('role-lead', tr('lead')) + btn('role-join', tr('join'), 'alt') });
+  const plan = A.plan, S = esc(prof.sym || '');
   if (prof.role === 'lead'){
     if (!reg || ui.editing)
-      return V('lead-entry:' + ep + ui.editing, { label: 'Rally lead · symbol + march', ctrl:
-        '<input id="inSym" maxlength="2" autocapitalize="characters" placeholder="VX" value="' + esc(prof.sym || '') + '" aria-label="2 letter symbol">' +
-        marchInput(prof.march) + btn('lead-ok', 'OK') + btn('role-back', '◂', 'alt') + '<span class="err" id="inErr"></span>' });
-    const me1 = esc(prof.sym) + ' ' + fmtMS(prof.march);
+      return V('lead-entry:' + ep + ui.editing + lang, { label: tr('leadEntry'), ctrl:
+        '<input id="inSym" maxlength="2" autocapitalize="characters" placeholder="VX" value="' + S + '" aria-label="' + esc(tr('leadEntry')) + '">' +
+        marchInput(prof.march) + btn('lead-ok', tr('ok')) + btn('role-back', tr('back'), 'alt') + '<span class="err" id="inErr"></span>' });
+    const me1 = S + ' ' + fmtMS(prof.march);
     if (A.stage === 'lobby')
-      return V('lead-wait:' + A.confirmed, { cls: 'idle', label: A.confirmed ? 'Standing by' : 'Waiting for admin', time: A.confirmed ? 'STANDBY' : 'WAIT', sub: me1,
-        ctrl: btn('lead-edit', '◂ edit', 'alt') });
+      return V('lead-wait:' + A.confirmed + lang, { cls: 'idle', label: A.confirmed ? tr('standingBy') : tr('waitingAdmin'), time: A.confirmed ? tr('standby') : tr('wait'), sub: me1,
+        ctrl: btn('lead-edit', tr('editBtn'), 'alt') });
     if (A.stage === 'ready'){
-      if (!me.ready) return V('lead-ready', { label: 'Ready check', ctrl: btn('ready', 'READY', 'go big') });
-      return V('lead-ready-done', { label: 'READY ✓', time: 'WAIT', sub: 'waiting for the others' });
+      if (!me.ready) return V('lead-ready:' + lang, { label: tr('readyCheck'), ctrl: btn('ready', tr('ready'), 'go big') });
+      return V('lead-ready-done', { label: tr('readyDone'), time: tr('wait'), sub: tr('waitOthers') });
     }
     if (A.stage === 'countdown'){
-      if (!plan || plan.hit[uid] == null) return V('lead-late', { label: 'Not in this op', time: 'MISSED', sub: 'wait for the next one' });
-      if (t < A.cdEnd) return V('cd', { cid: 'C' + A.cdEnd, cls: 'run', label: 'Rally timer starting in', time: String(Math.ceil((A.cdEnd - t) / 1000)), rem: A.cdEnd - t });
+      if (!plan || plan.hit[uid] == null) return V('lead-late', { label: tr('notInOp'), time: tr('missed'), sub: tr('waitNext') });
+      if (t < A.cdEnd) return V('cd', { cid: 'C' + A.cdEnd, cls: 'run', label: tr('cdLabel'), time: String(Math.ceil((A.cdEnd - t) / 1000)), rem: A.cdEnd - t });
       const L = plan.hit[uid] - Math.round(prof.march * 1000), rem = L - t, cid = 'L' + plan.hit[uid];
-      if (rem > 0) return V('run', { cid: cid, cls: rem < 3000 ? 'warn' : 'run', label: esc(prof.sym) + ' launch in', time: fmtCount(rem), rem: rem });
-      if (t < L + 1500) return V('send', { cid: cid, cls: 'go', label: esc(prof.sym), time: 'SEND', go: true, say: 'Send' });
-      if (t < plan.hit[uid] + 3000) return V('launched', { label: 'Rally running', time: 'LAUNCHED', sub: esc(prof.sym) });
-      return V('adone', { label: 'Done', time: 'DONE', sub: 'wait for the admin' });
+      if (rem > 0) return V('run', { cid: cid, cls: rem < 3000 ? 'warn' : 'run', label: tr('launchIn', { sym: S }), time: fmtCount(rem), rem: rem });
+      if (t < L + 1500) return V('send', { cid: cid, cls: 'go', label: S, time: tr('send'), go: true, say: tr('say_send') });
+      if (t < plan.hit[uid] + 3000) return V('launched', { label: tr('rallyRunning'), time: tr('launched'), sub: S });
+      return V('adone', { label: tr('doneLbl'), time: tr('DONE'), sub: tr('waitAdminSub') });
     }
     return V('lead-x', { label: '', time: '…' });
   }
   /* joiner */
   const lds = leadersNow();
   if (!reg || !me.rally){
-    if (!A.confirmed) return V('join-wait', { label: 'Waiting for leaders', time: 'WAIT', ctrl: btn('role-back', '◂', 'alt') });
+    if (!A.confirmed) return V('join-wait:' + lang, { label: tr('joinWait'), time: tr('wait'), ctrl: btn('role-back', tr('back'), 'alt') });
     if (!ui.pendingRally)
-      return V('join-pick:' + lds.map(l => l.uid + l.sym).join(','), { label: 'Pick your rally', ctrl:
-        lds.map(l => btn('pick', esc(l.sym), 'alt', 'data-u="' + l.uid + '"')).join('') + btn('role-back', '◂', 'alt') });
+      return V('join-pick:' + lang + lds.map(l => l.uid + l.sym).join(','), { label: tr('pickRally'), ctrl:
+        lds.map(l => btn('pick', esc(l.sym), 'alt', 'data-u="' + l.uid + '"')).join('') + btn('role-back', tr('back'), 'alt') });
     const pl = lds.find(l => l.uid === ui.pendingRally);
-    return V('join-march:' + ui.pendingRally, { label: 'Joining ' + esc(pl ? pl.sym : '?') + ' · your march', ctrl:
-      marchInput(prof.march) + btn('join-ok', 'OK') + btn('pick-back', '◂', 'alt') + '<span class="err" id="inErr"></span>' });
+    return V('join-march:' + ui.pendingRally + lang, { label: tr('joiningMarch', { sym: esc(pl ? pl.sym : '?') }), ctrl:
+      marchInput(prof.march) + btn('join-ok', tr('ok')) + btn('pick-back', tr('back'), 'alt') + '<span class="err" id="inErr"></span>' });
   }
   const ld = (D.players || {})[me.rally], sym = ld ? esc(ld.sym) : '?';
   if (A.stage === 'countdown' && plan && plan.launch && plan.launch[me.rally] != null){
-    if (t < A.cdEnd) return V('jcd', { cid: 'C' + A.cdEnd, cls: 'run', label: 'Joining ' + sym, time: String(Math.ceil((A.cdEnd - t) / 1000)), sub: 'rally timer starting', rem: A.cdEnd - t });
+    if (t < A.cdEnd) return V('jcd', { cid: 'C' + A.cdEnd, cls: 'run', label: tr('joining', { sym: sym }), time: String(Math.ceil((A.cdEnd - t) / 1000)), sub: tr('cdSub'), rem: A.cdEnd - t });
     const L = plan.launch[me.rally];
-    if (t < L) return V('jstand', { label: 'Joining ' + sym, time: 'WAIT', sub: 'rally not started yet' });
-    if (t < L + 15000) return V('jgo', { cid: 'J' + L, cls: 'go', label: sym, time: 'RALLY STARTED', sub: 'JOIN NOW', go: true, say: 'Rally started. Join now.' });
-    return V('jdone', { label: 'Done', time: 'DONE', sub: 'wait for the admin' });
+    if (t < L) return V('jstand', { label: tr('joining', { sym: sym }), time: tr('wait'), sub: tr('rallyNot') });
+    if (t < L + 15000) return V('jgo', { cid: 'J' + L, cls: 'go', label: sym, time: tr('rallyStarted'), sub: tr('joinNow'), go: true, say: tr('say_join') });
+    return V('jdone', { label: tr('doneLbl'), time: tr('DONE'), sub: tr('waitAdminSub') });
   }
-  return V('jstby:' + A.stage, { label: 'Joining ' + sym, time: A.stage === 'ready' ? 'READY?' : 'STANDBY', sub: 'march ' + fmtMS(prof.march), ctrl: btn('join-change', '◂ change', 'alt') });
+  return V('jstby:' + A.stage + lang, { label: tr('joining', { sym: sym }), time: A.stage === 'ready' ? tr('readyQ') : tr('standby'), sub: tr('marchSub', { t: fmtMS(prof.march) }), ctrl: btn('join-change', tr('changeBtn'), 'alt') });
 }
 
 function defenseView(t){
   const mar = prof.dmarch != null ? prof.dmarch : prof.march;
   if (mar == null || ui.editD)
-    return V('def-entry:' + ui.editD, { label: 'March to center', ctrl: marchInput(mar) + btn('def-ok', 'OK') + (ui.editD ? btn('def-cancel', '◂', 'alt') : '') + '<span class="err" id="inErr"></span>' });
+    return V('def-entry:' + ui.editD + lang, { label: tr('marchCenter'), ctrl: marchInput(mar) + btn('def-ok', tr('ok')) + (ui.editD ? btn('def-cancel', tr('back'), 'alt') : '') + '<span class="err" id="inErr"></span>' });
   const list = launchList((D.def && D.def.waves) || [], mar), st = defState(list, t);
   if (st.kind === 'count'){
-    const it = st.item, nx = st.nextGap != null ? ' · then ' + st.nextGap.toFixed(1) + 's' : '';
-    return V('dc', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: (it.urgent || st.rem < 3000) ? 'warn' : 'run', label: it.label + ' · send in', time: fmtCount(st.rem), sub: it.name + nx, cnt: st.left, rem: st.rem });
+    const it = st.item, nx = st.nextGap != null ? tr('thenGap', { s: st.nextGap.toFixed(1) }) : '';
+    return V('dc', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: (it.urgent || st.rem < 3000) ? 'warn' : 'run', label: tr('sendIn', { l: it.label }), time: fmtCount(st.rem), sub: esc(it.name) + nx, cnt: st.left, rem: st.rem });
   }
   if (st.kind === 'send'){
     const it = st.item;
-    return V('ds', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: 'go', label: it.label, time: 'SEND', cnt: st.left, go: true, say: 'Send' });
+    return V('ds', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: 'go', label: it.label, time: tr('send'), cnt: st.left, go: true, say: tr('say_send') });
   }
-  if (st.kind === 'done') return V('ddone', { label: 'All sent', time: 'DONE', sub: 'Check troop ratios', cls: 'idle' });
-  return V('didle', { label: 'Defense', time: 'STANDBY', sub: 'center march ' + fmtMS(mar), ctrl: btn('def-edit', '✎ march', 'alt') });
+  if (st.kind === 'done') return V('ddone', { label: tr('allSent'), time: tr('DONE'), sub: tr('checkRatios'), cls: 'idle' });
+  return V('didle:' + lang, { label: tr('defense'), time: tr('standby'), sub: tr('centerMarch', { t: fmtMS(mar) }), ctrl: btn('def-edit', tr('editMarch'), 'alt') });
 }
 
 function viewNow(){
-  if (Date.now() < modeBannerUntil && D) return V('mode', { cls: 'warn', label: 'MODE CHANGE', time: D.mode === 'defense' ? 'DEFENSE' : 'ATTACK' });
-  if (!D) return V('conn', { label: live ? '' : 'Connecting…', time: '…' });
+  if (Date.now() < modeBannerUntil && D) return V('mode', { cls: 'warn', label: tr('modeChange'), time: D.mode === 'defense' ? tr('modeDef') : tr('modeAtk') });
+  if (!D) return V('conn', { label: live ? '' : tr('connecting'), time: '…' });
   return D.mode === 'defense' ? defenseView(now()) : attackView(now());
 }
 
@@ -377,20 +603,25 @@ function viewNow(){
 const cv = $('cv'), g = cv.getContext('2d'), vid = $('vid');
 const colors = { idle: '#141b27', run: '#141b27', warn: '#2a1215', go: '#22c55e' };
 function plain(s){ return String(s).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'"); }
+function fitFont(txt, size, weight, maxW){
+  let s = size;
+  g.font = weight + ' ' + Math.round(s) + 'px system-ui,sans-serif';
+  while (s > 9 && g.measureText(txt).width > maxW){ s -= 1; g.font = weight + ' ' + Math.round(s) + 'px system-ui,sans-serif'; }
+}
 function draw(v){
   const w = cv.width, h = cv.height;
+  try { g.direction = lang === 'ar' ? 'rtl' : 'ltr'; } catch (e) {}
   g.fillStyle = colors[v.cls] || colors.idle; g.fillRect(0, 0, w, h);
   g.strokeStyle = v.cls === 'warn' ? '#ef4444' : v.cls === 'go' ? '#22c55e' : '#2b374a';
   g.lineWidth = h * 0.04; g.strokeRect(h * 0.02, h * 0.02, w - h * 0.04, h - h * 0.04);
   g.textAlign = 'center';
-  const dark = v.cls === 'go';
+  const dark = v.cls === 'go', mw = w * 0.84;
   g.fillStyle = dark ? '#04210f' : '#9fb0c3';
-  g.font = '700 ' + Math.round(h * 0.13) + 'px system-ui,sans-serif'; g.fillText(plain(v.label), w / 2, h * 0.22);
+  const lb = plain(v.label); fitFont(lb, h * 0.13, 700, mw * 0.8); g.fillText(lb, w / 2, h * 0.22);
   g.fillStyle = dark ? '#04210f' : v.cls === 'warn' ? '#ff6b6b' : v.cls === 'run' ? '#f5b301' : '#e6edf3';
-  const tx = plain(v.time), size = Math.min(h * 0.4, (w * 0.88) / (Math.max(tx.length, 1) * 0.6));
-  g.font = '800 ' + Math.round(size) + 'px system-ui,sans-serif'; g.fillText(tx, w / 2, h * 0.64);
+  const tx = plain(v.time); fitFont(tx, h * 0.4, 800, mw); g.fillText(tx, w / 2, h * 0.64);
   g.fillStyle = dark ? '#04210f' : '#9fb0c3';
-  g.font = '600 ' + Math.round(h * 0.11) + 'px system-ui,sans-serif'; g.fillText(plain(v.sub), w / 2, h * 0.88);
+  const sb = plain(v.sub); fitFont(sb, h * 0.11, 600, mw); g.fillText(sb, w / 2, h * 0.88);
   if (v.cnt != null){
     g.textAlign = 'right'; g.fillStyle = dark ? '#04210f' : '#e6edf3';
     g.font = '800 ' + Math.round(h * 0.15) + 'px system-ui,sans-serif'; g.fillText(String(v.cnt), w - h * 0.08, h * 0.2);
@@ -401,11 +632,11 @@ function draw(v){
 function tick(){
   const v = viewNow();
   box.className = 'box ' + v.cls;
-  lab.innerHTML = v.label; tim.innerHTML = v.time; tim.className = 't' + (v.time.length > 8 ? ' sm' : ''); sub.innerHTML = v.sub;
+  lab.innerHTML = v.label; tim.innerHTML = v.time; tim.className = 't' + (plain(v.time).length > 8 ? ' sm' : ''); sub.innerHTML = v.sub;
   if (v.cnt != null){ cntEl.hidden = false; cntEl.textContent = v.cnt; } else cntEl.hidden = true;
   if (v.key !== lastKey){ ctrl.innerHTML = v.ctrl; lastKey = v.key; }
   if (v.rem != null){ const s = Math.ceil(v.rem / 1000); if (s >= 1 && s <= 3) cue(v.cid + ':' + s, 660, 120, String(s), [60]); }
-  if (v.go) cue(v.cid + ':go', 990, 400, v.say || 'Send', [150, 60, 150]);
+  if (v.go) cue(v.cid + ':go', 990, 400, v.say || tr('say_send'), [150, 60, 150]);
   draw(v);
   tickMe(); tickAdmin();
   if (D && D.mode === 'attack' && D.attack.stage !== 'ready') starting = false;
@@ -426,9 +657,9 @@ box.addEventListener('click', e => {
   else if (act === 'lead-edit'){ ui.editing = true; }
   else if (act === 'lead-ok'){
     const sym = q('#inSym').value.toUpperCase().replace(/[^A-Z0-9]/g, ''), m = parseMS(q('#inMar').value);
-    if (sym.length !== 2) return err('Symbol must be 2 characters');
-    if (!m || m < 1) return err('Enter your march time');
-    if (leadersNow().some(l => l.uid !== uid && l.sym === sym)) return err('Symbol taken');
+    if (sym.length !== 2) return err(tr('symErr'));
+    if (!m || m < 1) return err(tr('marErr'));
+    if (leadersNow().some(l => l.uid !== uid && l.sym === sym)) return err(tr('symTaken'));
     prof.sym = sym; prof.march = m; saveProf(); ui.editing = false;
     upd({ ['players.' + uid]: myEntry({ role: 'lead', sym: sym, march: m, ready: false }) });
   }
@@ -436,13 +667,13 @@ box.addEventListener('click', e => {
   else if (act === 'pick'){ ui.pendingRally = b.dataset.u; }
   else if (act === 'pick-back'){ ui.pendingRally = null; }
   else if (act === 'join-ok'){
-    const m = parseMS(q('#inMar').value); if (!m || m < 1) return err('Enter your march time');
+    const m = parseMS(q('#inMar').value); if (!m || m < 1) return err(tr('marErr'));
     prof.march = m; saveProf();
     upd({ ['players.' + uid]: myEntry({ role: 'join', march: m, rally: ui.pendingRally }) }); ui.pendingRally = null;
   }
   else if (act === 'join-change'){ upd({ ['players.' + uid + '.rally']: deleteField() }); }
   else if (act === 'def-ok'){
-    const m = parseMS(q('#inMar').value); if (!m || m < 1) return err('Enter your march time');
+    const m = parseMS(q('#inMar').value); if (!m || m < 1) return err(tr('marErr'));
     prof.dmarch = m; saveProf(); ui.editD = false;
   }
   else if (act === 'def-edit'){ ui.editD = true; }
@@ -454,14 +685,14 @@ function tickMe(){
   const def = D && D.mode === 'defense';
   const val = def ? (prof.dmarch != null ? prof.dmarch : prof.march) : prof.march;
   $('meMar').textContent = fmtMS(val);
-  $('meLbl').textContent = def ? 'March to center' : 'March to target';
-  $('meInfo').textContent = (prof.role ? (prof.role === 'lead' ? 'Rally lead ' + (prof.sym || '') : 'Rally joiner') : 'No role yet') + (isAdmin ? ' · admin' : '');
+  $('meLbl').textContent = tr(def ? 'marchCenter' : 'marchTarget');
+  $('meInfo').textContent = (prof.role ? (prof.role === 'lead' ? tr('roleLead', { sym: prof.sym || '' }) : tr('roleJoin')) : tr('noRole')) + (isAdmin ? tr('adminSuffix') : '');
 }
 $('me').addEventListener('click', e => {
   const b = e.target.closest('[data-n]'); if (!b || !D) return;
   const d = parseFloat(b.dataset.n), def = D.mode === 'defense';
   const cur = def ? (prof.dmarch != null ? prof.dmarch : prof.march) : prof.march;
-  if (cur == null) return note('Enter a march time first.');
+  if (cur == null) return note(tr('noteMarchFirst'));
   const nv = Math.max(1, Math.round((cur + d) * 10) / 10);
   if (def) prof.dmarch = nv; else {
     prof.march = nv; saveProf();
@@ -470,7 +701,7 @@ $('me').addEventListener('click', e => {
   saveProf(); tick();
 });
 $('resetMe').onclick = () => {
-  if (!confirm('Leave and clear your role, symbol and march?')) return;
+  if (!confirm(tr('resetConfirm'))) return;
   prof = { role: null, sym: '', march: null, dmarch: null }; saveProf();
   ui.editing = false; ui.pendingRally = null; ui.editD = false;
   if (D && D.players && D.players[uid]) upd({ ['players.' + uid]: deleteField() });
@@ -478,21 +709,22 @@ $('resetMe').onclick = () => {
 };
 
 /* ---------- admin ---------- */
-const SKEL = '<div class="card"><div class="row tight"><b>ADMIN</b><span class="sp"></span><button class="mini alt" data-a="logout">Log out</button></div>' +
-  '<div class="tabs"><button id="tabA" data-a="tab" data-m="attack">1 · RALLY ATTACK</button><button id="tabD" data-a="tab" data-m="defense">2 · DEFENSE</button></div>' +
+function skel(){
+  return '<div class="card"><div class="row tight"><b>' + tr('admin') + '</b><span class="sp"></span><button class="mini alt" data-a="logout">' + tr('logout') + '</button></div>' +
+  '<div class="tabs"><button id="tabA" data-a="tab" data-m="attack">' + tr('tabAtk') + '</button><button id="tabD" data-a="tab" data-m="defense">' + tr('tabDef') + '</button></div>' +
   '<div id="aAtk"></div><div id="aDef" hidden>' +
-  '<div class="h">KNOWN ENEMIES · TAP TO FILL</div><div id="chips" class="row"></div>' +
-  '<div class="h">NEW ATTACK</div><div class="wcard"><div class="ln"><input id="bName" class="wide" maxlength="12" placeholder="NAME" aria-label="Enemy name"><span class="mut">march</span>' +
-  '<button class="s mini alt" data-a="bm" data-d="-1">−</button><input id="bMar" inputmode="numeric" value="0:30" aria-label="Enemy march"><button class="s mini alt" data-a="bm" data-d="1">+</button></div>' +
-  '<div class="ln"><button id="phR" class="mini" data-a="ph" data-p="rally">RALLY 5:00</button><button id="phM" class="mini" data-a="ph" data-p="march">ALREADY MARCHING</button></div>' +
-  '<div class="ln"><span class="mut">timer in game</span><input id="bTim" inputmode="numeric" placeholder="435" aria-label="Timer"><span class="mut" id="bEcho"></span><span class="sp"></span>' +
-  '<button id="bSync" class="go" data-a="sync">SYNC</button><button id="bCancel" class="alt mini" data-a="bcancel" hidden>✕</button></div></div>' +
-  '<div class="h">TIMELINE</div><div id="waves"></div></div></div>';
-
+  '<div class="h">' + tr('known') + '</div><div id="chips" class="row"></div>' +
+  '<div class="h">' + tr('newAttack') + '</div><div class="wcard"><div class="ln"><input id="bName" class="wide" maxlength="12" placeholder="' + esc(tr('namePh')) + '" aria-label="' + esc(tr('namePh')) + '"><span class="mut">' + tr('marchWord') + '</span>' +
+  '<button class="s mini alt" data-a="bm" data-d="-1">−</button><input id="bMar" inputmode="numeric" value="0:30" aria-label="' + esc(tr('marchWord')) + '"><button class="s mini alt" data-a="bm" data-d="1">+</button></div>' +
+  '<div class="ln"><button id="phR" class="mini" data-a="ph" data-p="rally">' + tr('rally5') + '</button><button id="phM" class="mini" data-a="ph" data-p="march">' + tr('alreadyMarching') + '</button></div>' +
+  '<div class="ln"><span class="mut">' + tr('timerInGame') + '</span><input id="bTim" inputmode="numeric" placeholder="435" aria-label="' + esc(tr('timerInGame')) + '"><span class="mut" id="bEcho"></span><span class="sp"></span>' +
+  '<button id="bSync" class="go" data-a="sync">' + tr('syncBtn') + '</button><button id="bCancel" class="alt mini" data-a="bcancel" hidden>✕</button></div></div>' +
+  '<div class="row tight"><div class="h" style="margin:0">' + tr('timeline') + '</div><span class="sp"></span><button class="rd mini" data-a="resetdef">' + tr('resetDef') + '</button></div><div id="waves"></div></div></div>';
+}
 function loginForm(){
   adminSec.hidden = false;
-  adminSec.innerHTML = '<div class="card"><div class="row tight"><input id="pw" type="password" class="wide" style="text-transform:none;width:160px" placeholder="Admin password" aria-label="Admin password"><button data-a="login">Log in</button><button class="alt mini" data-a="closelogin">✕</button></div>' +
-    (ADMIN_PASSWORD === 'CHANGE-ME' ? '<div class="mut">Default password is still in use. Edit ADMIN_PASSWORD in index.html.</div>' : '') + '<div class="err" id="pwErr"></div></div>';
+  adminSec.innerHTML = '<div class="card"><div class="row tight"><input id="pw" type="password" class="wide" style="text-transform:none;width:160px" placeholder="' + esc(tr('pw')) + '" aria-label="' + esc(tr('pw')) + '"><button data-a="login">' + tr('login') + '</button><button class="alt mini" data-a="closelogin">✕</button></div>' +
+    (ADMIN_PASSWORD === 'CHANGE-ME' ? '<div class="mut">' + tr('defaultPw') + '</div>' : '') + '<div class="err" id="pwErr"></div></div>';
 }
 $('adminBtn').onclick = () => { if (isAdmin) return; loginForm(); const p = $('pw'); if (p) p.focus(); };
 
@@ -510,12 +742,12 @@ async function claimAdmin(){
 }
 async function becomeAdmin(){
   const ok = await claimAdmin();
-  if (ok === 'taken'){ const x = $('pwErr'); if (x) x.textContent = 'Another admin is active.'; else note('Another admin is active.'); return; }
+  if (ok === 'taken'){ const x = $('pwErr'); if (x) x.textContent = tr('noteTaken'); else note(tr('noteTaken')); return; }
   if (!ok) return;
   isAdmin = true; try { localStorage.setItem('tacsync_admin', '1'); } catch (e) {}
-  adminSec.hidden = false; adminSec.innerHTML = SKEL; $('adminBtn').hidden = true;
+  adminSec.hidden = false; adminSec.innerHTML = skel(); $('adminBtn').hidden = true;
   clearInterval(hbTimer); hbTimer = setInterval(() => upd({ 'admin.hb': Math.round(now()) }), 10000);
-  syncBar(); if (D) renderAdmin();
+  if (D) renderAdmin();
 }
 function leaveAdmin(msg){
   isAdmin = false; clearInterval(hbTimer); adminSec.hidden = true; adminSec.innerHTML = ''; $('adminBtn').hidden = false;
@@ -534,37 +766,41 @@ function renderAtk(){
   const A = D.attack, L = leadersNow(), offs = offsetsFor(L), J = joinersNow();
   const list = L.map((l, i) => ({ uid: l.uid, march: l.march, off: offs[i] }));
   const pv = L.length ? buildPlan(list, A.buffer || 10, 0) : null;
-  let h = '<div class="row tight"><b>Leaders ' + L.length + ' · Joiners ' + J.length + '</b><span class="sp"></span>' +
-    '<button class="' + (A.confirmed ? 'go' : '') + '" data-a="confirm" ' + (A.confirmed ? 'disabled' : '') + '>' + (A.confirmed ? 'LEADERS LOCKED' : 'CONFIRM LEADERS') + '</button></div>';
-  h += '<div class="h">HIT ORDER · FIRST HIT ON TOP</div>';
+  let h = '<div class="row tight"><b>' + tr('leadersJoiners', { a: L.length, b: J.length }) + '</b><span class="sp"></span>' +
+    '<button class="' + (A.confirmed ? 'go' : '') + '" data-a="confirm" ' + (A.confirmed ? 'disabled' : '') + '>' + (A.confirmed ? tr('leadersLocked') : tr('confirmLeaders')) + '</button></div>';
+  h += '<div class="h">' + tr('hitOrder') + '</div>';
   L.forEach((l, i) => {
     const rdy = A.stage === 'ready' ? l.ready : A.stage === 'countdown';
     const jn = J.filter(j => j.rally === l.uid).length;
-    h += '<div class="lrow"><span class="ar"><button class="alt" data-a="up" data-u="' + l.uid + '" aria-label="Move up">↑</button><button class="alt" data-a="dn" data-u="' + l.uid + '" aria-label="Move down">↓</button></span>' +
-      '<span class="sym ' + (rdy ? 'rdy' : '') + '">' + esc(l.sym) + '</span><b>' + fmtMS(l.march) + '</b><span class="mut">' + jn + ' joined</span><span class="sp"></span>' +
+    h += '<div class="lrow"><span class="ar"><button class="alt" data-a="up" data-u="' + l.uid + '" aria-label="' + esc(tr('moveUp')) + '">↑</button><button class="alt" data-a="dn" data-u="' + l.uid + '" aria-label="' + esc(tr('moveDown')) + '">↓</button></span>' +
+      '<span class="sym ' + (rdy ? 'rdy' : '') + '">' + esc(l.sym) + '</span><b>' + fmtMS(l.march) + '</b><span class="mut">' + tr('joinedN', { n: jn }) + '</span><span class="sp"></span>' +
       '<button class="alt s mini" data-a="off" data-u="' + l.uid + '" data-d="-0.1">−</button><b>+' + offs[i].toFixed(1) + '</b><button class="alt s mini" data-a="off" data-u="' + l.uid + '" data-d="0.1">+</button>' +
       '<b class="mut" data-ar="' + l.uid + '" data-pv="' + (pv ? (pv.launch[l.uid] / 1000).toFixed(1) : '') + '"></b></div>';
   });
-  if (!L.length) h += '<div class="mut">No leaders yet. Share the link and ask leaders to pick LEAD.</div>';
-  h += '<div class="row tight"><span class="mut">Lead buffer</span>' + [5, 10, 15, 30].map(n => '<button class="mini ' + ((A.buffer || 10) === n ? '' : 'alt') + '" data-a="buf" data-n="' + n + '">' + n + 's</button>').join('') + '</div>';
-  h += '<div class="row"><button class="go" data-a="rcheck">READY CHECK</button><button class="alt" data-a="start">START NOW</button><button class="rd" data-a="reset">RESET</button></div>';
-  h += '<div class="mut" id="atkSt"></div><div class="mut">Offsets: 0.1 s apart, last rally +0.4 s. Change any with − and +.</div>';
+  if (!L.length) h += '<div class="mut">' + tr('noLeadersMsg') + '</div>';
+  h += '<div class="row tight"><span class="mut">' + tr('leadBuffer') + '</span>' + [5, 10, 15, 30].map(n => '<button class="mini ' + ((A.buffer || 10) === n ? '' : 'alt') + '" data-a="buf" data-n="' + n + '">' + n + 's</button>').join('') + '</div>';
+  h += '<div class="row"><button class="go" data-a="rcheck">' + tr('readyCheckBtn') + '</button><button class="alt" data-a="start">' + tr('startNow') + '</button><button class="rd" data-a="reset">' + tr('reset') + '</button></div>';
+  h += '<div class="mut" id="atkSt"></div><div class="mut">' + tr('offsetsNote') + '</div>';
   $('aAtk').innerHTML = h;
 }
 function renderDef(){
   const W = (D.def && D.def.waves) || [], E = (D.def && D.def.enemies) || [], info = waveInfo(W);
-  $('chips').innerHTML = E.length ? E.map(e => '<button class="alt mini" data-a="enemy" data-n="' + esc(e.name) + '">' + esc(e.name) + ' ' + fmtMS(e.march) + '</button>').join('') : '<span class="mut">None yet. New names start at 0:30.</span>';
+  $('chips').innerHTML = E.length
+    ? E.map(e => '<span class="chip"><button class="alt mini" data-a="enemy" data-n="' + esc(e.name) + '">' + esc(e.name) + ' ' + fmtMS(e.march) + '</button>' +
+        '<button class="alt mini" data-a="enemydel" data-n="' + esc(e.name) + '" aria-label="' + esc(tr('forgetOne', { n: e.name })) + '">✕</button></span>').join('') +
+      '<button class="rd mini" data-a="enemyclear">' + tr('forgetAll') + '</button>'
+    : '<span class="mut">' + tr('knownNone') + '</span>';
   $('phR').className = 'mini ' + (bar.phase === 'rally' ? '' : 'alt'); $('phM').className = 'mini ' + (bar.phase === 'march' ? '' : 'alt');
-  $('bSync').textContent = bar.editId ? 'RESYNC' : 'SYNC'; $('bCancel').hidden = !bar.editId;
+  $('bSync').textContent = bar.editId ? tr('resyncBtn') : tr('syncBtn'); $('bCancel').hidden = !bar.editId;
   let h = '';
   info.forEach((w, i) => {
-    if (w.gap !== null) h += '<div class="mut ' + (w.urgent ? 'urg' : '') + '" style="margin:2px 0 2px 10px">gap ' + info[i - 1].label + ' → ' + w.label + ' ' + w.gap.toFixed(1) + ' s</div>';
+    if (w.gap !== null) h += '<div class="mut ' + (w.urgent ? 'urg' : '') + '" style="margin:2px 0 2px 10px">' + tr('gapLbl', { a: info[i - 1].label, b: w.label, s: w.gap.toFixed(1) }) + '</div>';
     h += '<div class="wcard ' + (w.urgent ? 'u' : '') + '"><div class="ln"><b>' + w.label + ' ' + esc(w.name) + '</b><span class="tm ' + (w.urgent ? 'urg' : '') + '" data-wv="' + w.id + '"></span><span class="sp"></span>' +
-      '<span class="mut">land +</span><b>' + (w.off == null ? 0.4 : w.off).toFixed(1) + '</b><button class="s" data-a="woff" data-id="' + w.id + '" data-d="-0.1">−.1</button><button class="s" data-a="woff" data-id="' + w.id + '" data-d="0.1">+.1</button></div>' +
+      '<span class="mut">' + tr('landPlus') + '</span><b>' + (w.off == null ? 0.4 : w.off).toFixed(1) + '</b><button class="s" data-a="woff" data-id="' + w.id + '" data-d="-0.1">−.1</button><button class="s" data-a="woff" data-id="' + w.id + '" data-d="0.1">+.1</button></div>' +
       '<div class="ln"><div class="adj">' + [-1, -0.1, 0.1, 1].map(d => '<button data-a="wsh" data-id="' + w.id + '" data-d="' + d + '">' + (d > 0 ? '+' : '−') + Math.abs(d).toString().replace('0.', '.') + '</button>').join('') +
-      '</div><span class="sp"></span><button class="s" data-a="wre" data-id="' + w.id + '">RESYNC</button><button class="s" data-a="wdel" data-id="' + w.id + '">✕</button></div></div>';
+      '</div><span class="sp"></span><button class="s" data-a="wre" data-id="' + w.id + '">' + tr('resyncBtn') + '</button><button class="s" data-a="wdel" data-id="' + w.id + '">✕ ' + tr('removeBtn') + '</button></div></div>';
   });
-  if (!info.length) h = '<div class="mut">No incoming attacks.</div>'; else h += '<button class="alt mini" data-a="wclear">Clear all</button>';
+  if (!info.length) h = '<div class="mut">' + tr('noAttacks') + '</div>'; else h += '<button class="alt mini" data-a="wclear">' + tr('clearAll') + '</button>';
   $('waves').innerHTML = h;
 }
 function tickAdmin(){
@@ -575,21 +811,21 @@ function tickAdmin(){
     document.querySelectorAll('[data-ar]').forEach(el => {
       const u = el.dataset.ar;
       if (A.stage === 'countdown' && plan && plan.launch[u] != null){
-        const rem = plan.launch[u] - t; el.textContent = rem > 0 ? 'T−' + fmtCount(rem) : 'launched';
-      } else el.textContent = el.dataset.pv ? 'starts ' + el.dataset.pv : '';
+        const rem = plan.launch[u] - t; el.textContent = rem > 0 ? tr('tMinus', { t: fmtCount(rem) }) : tr('launchedLbl');
+      } else el.textContent = el.dataset.pv ? tr('startsT', { t: el.dataset.pv }) : '';
     });
     const st = $('atkSt');
-    if (st) st.textContent = A.stage === 'countdown' ? (t < A.cdEnd ? 'Starting in ' + Math.ceil((A.cdEnd - t) / 1000) : 'Rally op running') : A.stage === 'ready' ? 'Ready check: waiting for leaders' : (A.confirmed ? 'Leaders confirmed' : 'Collecting leaders');
+    if (st) st.textContent = A.stage === 'countdown' ? (t < A.cdEnd ? tr('stStarting', { n: Math.ceil((A.cdEnd - t) / 1000) }) : tr('stRunning')) : A.stage === 'ready' ? tr('stReadyWait') : (A.confirmed ? tr('stConfirmed') : tr('stCollecting'));
   } else {
     const W = (D.def && D.def.waves) || [];
     document.querySelectorAll('[data-wv]').forEach(el => {
       const w = W.find(x => x.id === el.dataset.wv); if (!w) return;
-      el.textContent = (w.rallyEnd && t < w.rallyEnd) ? 'RALLY ' + fmtCount(w.rallyEnd - t) : t < w.landAt ? 'MARCH ' + fmtCount(w.landAt - t) : 'LANDED';
+      el.textContent = (w.rallyEnd && t < w.rallyEnd) ? tr('rallyW') + ' ' + fmtCount(w.rallyEnd - t) : t < w.landAt ? tr('marchW') + ' ' + fmtCount(w.landAt - t) : tr('landedW');
     });
     if (Math.floor(t / 1000) % 10 === 0 && W.some(w => w.landAt < t - 60000)) upd({ 'def.waves': W.filter(w => w.landAt >= t - 60000) });
   }
 }
-function syncBar(){ $('bEcho').textContent = ''; }
+function clearBar(){ bar.editId = null; const n = $('bName'), tm = $('bTim'), e = $('bEcho'); if (n) n.value = ''; if (tm) tm.value = ''; if (e) e.textContent = ''; }
 
 adminSec.addEventListener('input', e => {
   if (e.target.id === 'bTim'){ const s = parseMS(e.target.value); $('bEcho').textContent = s == null ? '' : '= ' + fmtMS(s); }
@@ -599,7 +835,7 @@ adminSec.addEventListener('click', async e => {
   const a = b.dataset.a;
   if (a === 'login'){
     if ($('pw').value === ADMIN_PASSWORD) return becomeAdmin();
-    $('pwErr').textContent = 'Wrong password'; return;
+    $('pwErr').textContent = tr('wrongPw'); return;
   }
   if (a === 'closelogin'){ adminSec.hidden = true; adminSec.innerHTML = ''; return; }
   if (!D || !isAdmin) return;
@@ -607,7 +843,7 @@ adminSec.addEventListener('click', async e => {
   if (a === 'logout'){ upd({ admin: null }); return leaveAdmin(); }
   if (a === 'tab'){
     const m = b.dataset.m; if (m === D.mode) return;
-    if (confirm('Switch to ' + (m === 'defense' ? 'DEFENSE' : 'RALLY ATTACK') + ' mode? All players get a notice. Roles and marches are kept.')) upd({ mode: m, modeAt: Math.round(now()) });
+    if (confirm(tr('modeConfirm', { m: tr(m === 'defense' ? 'modeNameDef' : 'modeNameAtk') }))) upd({ mode: m, modeAt: Math.round(now()) });
   }
   else if (a === 'confirm'){ const L = leadersNow(); upd({ 'attack.confirmed': true, 'attack.order': L.map(l => l.uid) }); }
   else if (a === 'up' || a === 'dn'){
@@ -621,29 +857,34 @@ adminSec.addEventListener('click', async e => {
   }
   else if (a === 'buf'){ upd({ 'attack.buffer': parseInt(b.dataset.n, 10) }); }
   else if (a === 'rcheck'){
-    if (!A.confirmed) return note('Confirm leaders first.');
+    if (!A.confirmed) return note(tr('noteConfirmFirst'));
     const u = { 'attack.stage': 'ready', 'attack.plan': null };
     leadersNow().forEach(l => { u['players.' + l.uid + '.ready'] = false; });
     upd(u);
   }
-  else if (a === 'start'){ if (!leadersNow().length) return note('No leaders yet.'); startCountdown(); }
+  else if (a === 'start'){ if (!leadersNow().length) return note(tr('noteNoLeaders')); startCountdown(); }
   else if (a === 'reset'){
-    if (confirm('Reset the op? Leaders and joiners go back and re-enter.')) upd({ 'attack.stage': 'lobby', 'attack.confirmed': false, 'attack.plan': null, 'attack.cdEnd': 0, 'attack.order': [], 'attack.off': {}, 'attack.epoch': (A.epoch || 0) + 1 });
+    if (confirm(tr('resetOpConfirm'))) upd({ 'attack.stage': 'lobby', 'attack.confirmed': false, 'attack.plan': null, 'attack.cdEnd': 0, 'attack.order': [], 'attack.off': {}, 'attack.epoch': (A.epoch || 0) + 1 });
   }
   /* defense */
+  else if (a === 'resetdef'){
+    if (confirm(tr('resetDefConfirm'))){ upd({ 'def.waves': [] }); clearBar(); $('bMar').value = '0:30'; renderAdmin(); }
+  }
+  else if (a === 'enemydel'){ upd({ 'def.enemies': E.filter(x => x.name !== b.dataset.n) }); }
+  else if (a === 'enemyclear'){ if (confirm(tr('forgetAllConfirm'))) upd({ 'def.enemies': [] }); }
   else if (a === 'enemy'){
     const en = E.find(x => x.name === b.dataset.n); if (!en) return;
     $('bName').value = en.name; $('bMar').value = fmtMS(en.march); $('bTim').focus();
   }
   else if (a === 'bm'){ const m = parseMS($('bMar').value) || 30; $('bMar').value = fmtMS(Math.max(1, m + parseInt(b.dataset.d, 10))); }
   else if (a === 'ph'){ bar.phase = b.dataset.p; renderAdmin(); }
-  else if (a === 'bcancel'){ bar.editId = null; $('bName').value = ''; $('bTim').value = ''; $('bEcho').textContent = ''; renderAdmin(); }
+  else if (a === 'bcancel'){ clearBar(); renderAdmin(); }
   else if (a === 'sync'){
     const name = ($('bName').value.trim() || 'ENEMY').toUpperCase().slice(0, 12);
     const known = E.find(x => x.name === name);
     const march = parseMS($('bMar').value) || (known ? known.march : 30), timer = parseMS($('bTim').value);
-    if (timer == null) return note('Type the timer shown in the game.');
-    if (!bar.editId && W.length >= 6) return note('Six attacks is the limit. Clear one first.');
+    if (timer == null) return note(tr('noteTypeTimer'));
+    if (!bar.editId && W.length >= 6) return note(tr('noteLimit'));
     const t = Math.round(now());
     const rallyEnd = bar.phase === 'rally' ? t + timer * 1000 : null, landAt = bar.phase === 'rally' ? rallyEnd + march * 1000 : t + timer * 1000;
     const old = bar.editId ? W.find(x => x.id === bar.editId) : null;
@@ -651,10 +892,10 @@ adminSec.addEventListener('click', async e => {
     const nw = old ? W.map(x => x.id === w.id ? w : x) : W.concat([w]);
     const ne = E.filter(x => x.name !== name).concat([{ name: name, march: march }]);
     upd({ 'def.waves': nw, 'def.enemies': ne });
-    bar.editId = null; $('bName').value = ''; $('bTim').value = ''; $('bEcho').textContent = '';
+    clearBar();
   }
   else if (a === 'woff' || a === 'wsh' || a === 'wre' || a === 'wdel' || a === 'wclear'){
-    if (a === 'wclear'){ if (confirm('Clear all incoming attacks?')) upd({ 'def.waves': [] }); return; }
+    if (a === 'wclear'){ if (confirm(tr('clearAllConfirm'))) upd({ 'def.waves': [] }); return; }
     const w = W.find(x => x.id === b.dataset.id); if (!w) return;
     if (a === 'wdel') return upd({ 'def.waves': W.filter(x => x.id !== w.id) });
     if (a === 'wre'){
@@ -688,7 +929,7 @@ function onDoc(){
   if (lastMode !== null && D.mode !== lastMode){ modeBannerUntil = Date.now() + 2000; beep(520, 200); invalidate(); }
   lastMode = D.mode;
   if (isAdmin){
-    if (D.admin && D.admin.uid !== uid) leaveAdmin('Another admin took over.');
+    if (D.admin && D.admin.uid !== uid) leaveAdmin(tr('noteTookOver'));
     else { maybeAutoStart(); renderAdmin(); }
   }
   tick();
@@ -698,8 +939,8 @@ function subscribe(){
   ensureRoom().catch(fail);
   unsub = onSnapshot(roomRef(), s => {
     if (!s.exists()){ ensureRoom().catch(fail); return; }
-    D = s.data(); live = true; $('net').textContent = 'Live'; $('net').className = 'pill live'; onDoc();
-  }, e => { live = false; $('net').textContent = 'Offline'; $('net').className = 'pill off'; fail(e); });
+    D = s.data(); live = true; netState = 'live'; refreshStatic(); onDoc();
+  }, e => { live = false; netState = 'off'; refreshStatic(); fail(e); });
 }
 $('room').onchange = e => {
   const v = e.target.value.replace(/[^A-Za-z0-9_-]/g, '').toUpperCase() || '261';
@@ -715,9 +956,11 @@ $('pop').onclick = () => {
     documentPictureInPicture.requestWindow({ width: 320, height: 210 }).then(pw => {
       const st = pw.document.createElement('style');
       st.textContent = Array.from(document.querySelectorAll('style')).map(s => s.textContent).join('\n') + 'body{margin:0;padding:6px;background:#0d1117;color:#e6edf3;font:14px system-ui,sans-serif}';
-      pw.document.head.append(st); pw.document.body.append(box);
+      pw.document.head.append(st);
+      pw.document.documentElement.dir = document.documentElement.dir; pw.document.documentElement.lang = lang;
+      pw.document.body.append(box);
       pw.addEventListener('pagehide', () => $('boxSlot').append(box));
-    }).catch(e => note('Pop-out refused: ' + e.message));
+    }).catch(e => note(tr('notePopRef', { m: e.message })));
     return;
   }
   if (vid.paused) primeVideo();
@@ -725,32 +968,32 @@ $('pop').onclick = () => {
     if (vid.requestPictureInPicture){
       vid.requestPictureInPicture().catch(e => {
         if (vid.webkitSetPresentationMode){ try { vid.webkitSetPresentationMode('picture-in-picture'); return; } catch (x) {} }
-        note('Pop-out refused: ' + e.message + ' Tap again.');
+        note(tr('notePopTap', { m: e.message }));
       });
     } else if (vid.webkitSetPresentationMode) vid.webkitSetPresentationMode('picture-in-picture');
-    else note('This browser has no pop-out.');
-  } catch (e) { note('Pop-out refused: ' + e.message + ' Tap again.'); }
+    else note(tr('notePopNone'));
+  } catch (e) { note(tr('notePopTap', { m: e.message })); }
 };
-let wake = null;
 $('wake').onclick = async () => {
-  if (!('wakeLock' in navigator)) return note('Keep awake is not supported here.');
-  try { wake = await navigator.wakeLock.request('screen'); $('wake').textContent = 'Screen kept awake'; wake.addEventListener('release', () => { $('wake').textContent = 'Keep screen awake'; }); }
-  catch (e) { note('Keep awake refused: ' + e.message); }
+  if (!('wakeLock' in navigator)) return note(tr('noteWakeNo'));
+  try { wake = await navigator.wakeLock.request('screen'); refreshStatic(); wake.addEventListener('release', refreshStatic); }
+  catch (e) { note(tr('noteWakeRef', { m: e.message })); }
 };
 document.addEventListener('visibilitychange', async () => {
-  if (wake && wake.released && document.visibilityState === 'visible'){ try { wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
+  if (wake && wake.released && document.visibilityState === 'visible'){ try { wake = await navigator.wakeLock.request('screen'); refreshStatic(); } catch (e) {} }
 });
 
 /* ---------- boot ---------- */
 (async function boot(){
+  applyLang();
   tick();
   try {
     app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
     await signInAnonymously(auth); uid = auth.currentUser.uid;
-  } catch (e){ fail(e); return; }
+  } catch (e){ netState = 'off'; refreshStatic(); fail(e); return; }
   await syncClock();
-  $('sync').textContent = rttMs == null ? 'clock --' : 'clock ±' + Math.round(rttMs / 2) + 'ms';
-  setInterval(async () => { await syncClock(); $('sync').textContent = rttMs == null ? 'clock --' : 'clock ±' + Math.round(rttMs / 2) + 'ms'; }, 60000);
+  refreshStatic();
+  setInterval(syncClock, 60000);
   subscribe();
   try { if (localStorage.getItem('tacsync_admin') === '1') becomeAdmin(); } catch (e) {}
 })();
