@@ -20,6 +20,7 @@ const LANGS = { en: 'English', fr: 'Français', es: 'Español', ar: 'العرب�
 const VOICE = { en: 'en-US', fr: 'fr-FR', es: 'es-ES', ar: 'ar-SA', ko: 'ko-KR', ja: 'ja-JP' };
 const L = {
 en: {
+ tutBtn:'Tutorial', tutNote:'Practice only. Nothing is sent to your team.', tutMenu:'Choose a practice', tutLeadBtn:'Rally Lead', tutJoinBtn:'Rally Joiner', tutDefBtn:'Defense', tutStepN:'Step {n} of {m}', tutNext:'Next', tutExit:'Exit tutorial', tutOpen:'Ready: open the pop-out', tutCont:'Continue', tutAgain:'Practice again', tutToMenu:'Menu', tutSound:'Turn on sound', tutAdmin:'Log out of admin before starting the tutorial.', tutTeam:'Team sends', tutSwitch:'Switch to your game', tutStartIn:'starting soon', tutRetLbl:'Well done!', tutRetTime:'GO BACK', tutRetSub:'return to the tutorial', tutRetSay:'Well done. Return to the tutorial.', sL1:'You are Rally Lead VX. Two teammates, AB and KT, are simulated. The tutorial plays the admin.', sL2:'Tap LEAD in the box below.', sL3:'Your symbol and march time are pre-filled (VX, 0:50). Check them and tap OK.', sL4:'WAIT: the admin has not confirmed the leaders yet. Tap Next to let the admin confirm.', sL5:'STANDBY: the leaders are locked in. Tap Next to start the ready check.', sL6:'Ready check! Tap the green READY button in the box below.', sL7:'Everyone is ready. The admin starts the countdown next. Tap the button, then switch to your game and watch the floating window.', sRun:'Switch to your game now. The floating window counts down 3, 2, 1, then shows your launch timer and flashes SEND. It will tell you when to come back. If it cannot open, watch the box below.', sL9:'That was a full rally. AB launched first so all rallies land together. On a phone, tap READY inside the app before you pop out.', sJ1:'You are a rally joiner. Four leaders (AB, KT, QZ, VX) are simulated. The tutorial plays the admin and the leaders.', sJ2:'Tap JOIN in the box below.', sJ3:'WAIT: the admin has not confirmed the leaders yet. Tap Next to let the admin confirm.', sJ4:'Pick your rally: tap the symbol of the leader you will join.', sJ5:'Enter your march time (pre-filled 0:41) and tap OK.', sJ6:'STANDBY: nothing to tap. Tap Next to start the ready check.', sJ7:'The countdown is about to start. Tap the button, switch to your game and watch. When your leader launches, the window turns green: RALLY STARTED, JOIN NOW.', sJ9:'Well done. When you see RALLY STARTED, join that rally in the game.', sD1:'The same team (AB, KT, QZ, VX) defends with you. The admin switched to Defense mode.', sD2:'Type your march to the center, 0:36, and tap OK.', sD3:'One attack is coming. Everyone sends so reinforcements land 0.4 s after the hit. Tap the button, switch to your game, and send when the timer reaches zero.', sD6:'Now three attacks arrive close together. The small number is how many sends you have left. A red glow means two attacks land within 1 second of each other, so you send twice almost at once. Each timer is replaced by the next one by itself.', sD9:'You can defend now. If you start late, speed up your march in the game. After the last send, check your troop ratios.',
  ginPh:'In-game name', nameNeeded:'Enter your in-game name', ctlYou:'You have control', ctlView:'View only · {n} has control', ctlNone:'No one has control yet', adminsHere:'Admins here', reqBtn:'Request control', reqSent:'Request sent', reqQueue:'Position {p} in line', reqCancel:'Cancel', reqRow:'{n} requests control', xferBtn:'Transfer', declBtn:'Decline', ctlGained:'You now have control', ctlLost:'Control moved to {n}', ctlDeclined:'Your request was declined', ctlExpired:'Your request expired', ctlNoReq:'That request is gone', viewNote:'Only the admin with control can change these. You can still use the LEAD or JOIN box.',
  emailPh:'Admin email', badLogin:'Wrong email or password', errEmailOff:'Turn on Email/Password sign-in in Firebase Authentication.',
  back:'◂', language:'Language', live:'Live', offline:'Offline', connecting:'Connecting…', room:'Room', clockPill:'clock ±{n}ms', clockNone:'clock --',
@@ -51,6 +52,7 @@ en: {
  resetDef:'RESET DEFENSE', resetDefConfirm:'Reset defense? This clears every attack and the sync bar. Known enemies are kept.', forgetAll:'Forget all', forgetAllConfirm:'Forget all known enemies?', forgetOne:'Forget {n}'
 },
 fr: {
+ tutBtn:'Tutoriel', tutNote:'Entraînement uniquement. Rien n’est envoyé à votre équipe.', tutMenu:'Choisissez un entraînement', tutLeadBtn:'Chef de rallye', tutJoinBtn:'Participant', tutDefBtn:'Défense', tutStepN:'Étape {n} sur {m}', tutNext:'Suivant', tutExit:'Quitter le tutoriel', tutOpen:'Prêt : ouvrir la surimpression', tutCont:'Continuer', tutAgain:'Recommencer', tutToMenu:'Menu', tutSound:'Activer le son', tutAdmin:'Déconnectez-vous du mode admin avant de lancer le tutoriel.', tutTeam:'Envois de l’équipe', tutSwitch:'Passez à votre jeu', tutStartIn:'démarrage imminent', tutRetLbl:'Bravo !', tutRetTime:'RETOUR', tutRetSub:'revenez au tutoriel', tutRetSay:'Bravo. Revenez au tutoriel.', sL1:'Vous êtes le chef de rallye VX. Deux coéquipiers, AB et KT, sont simulés. Le tutoriel joue l’admin.', sL2:'Appuyez sur CHEF dans la case ci-dessous.', sL3:'Votre symbole et votre temps de marche sont pré-remplis (VX, 0:50). Vérifiez et appuyez sur OK.', sL4:'ATTENDEZ : l’admin n’a pas encore confirmé les chefs. Appuyez sur Suivant pour qu’il confirme.', sL5:'EN VEILLE : les chefs sont verrouillés. Appuyez sur Suivant pour lancer la vérification.', sL6:'Vérification ! Appuyez sur le bouton vert PRÊT dans la case ci-dessous.', sL7:'Tout le monde est prêt. L’admin lance ensuite le compte à rebours. Appuyez sur le bouton, passez à votre jeu et regardez la fenêtre flottante.', sRun:'Passez à votre jeu maintenant. La fenêtre flottante compte 3, 2, 1, puis affiche votre minuteur de lancement et clignote ENVOI. Elle vous dira quand revenir. Si elle ne s’ouvre pas, regardez la case ci-dessous.', sL9:'C’était un rallye complet. AB a lancé en premier pour que tous les rallyes arrivent ensemble. Sur téléphone, appuyez sur PRÊT dans l’application avant d’ouvrir la surimpression.', sJ1:'Vous êtes participant. Quatre chefs (AB, KT, QZ, VX) sont simulés. Le tutoriel joue l’admin et les chefs.', sJ2:'Appuyez sur REJOINDRE dans la case ci-dessous.', sJ3:'ATTENDEZ : l’admin n’a pas encore confirmé les chefs. Appuyez sur Suivant pour qu’il confirme.', sJ4:'Choisissez votre rallye : appuyez sur le symbole du chef que vous rejoignez.', sJ5:'Saisissez votre temps de marche (pré-rempli 0:41) et appuyez sur OK.', sJ6:'EN VEILLE : rien à appuyer. Appuyez sur Suivant pour lancer la vérification.', sJ7:'Le compte à rebours va commencer. Appuyez sur le bouton, passez à votre jeu et regardez. Quand votre chef lance, la fenêtre devient verte : RALLYE LANCÉ, REJOIGNEZ !', sJ9:'Bien joué. Quand vous voyez RALLYE LANCÉ, rejoignez ce rallye dans le jeu.', sD1:'La même équipe (AB, KT, QZ, VX) défend avec vous. L’admin est passé en mode Défense.', sD2:'Saisissez votre temps de marche vers le centre, 0:36, et appuyez sur OK.', sD3:'Une attaque arrive. Tout le monde envoie pour que les renforts arrivent 0,4 s après l’impact. Appuyez sur le bouton, passez à votre jeu et envoyez quand le minuteur atteint zéro.', sD6:'Trois attaques arrivent maintenant très rapprochées. Le petit nombre indique combien d’envois il vous reste. Une lueur rouge signifie que deux attaques arrivent à moins d’1 seconde l’une de l’autre : vous envoyez deux fois presque en même temps. Chaque minuteur est remplacé automatiquement par le suivant.', sD9:'Vous savez défendre. Si vous partez en retard, accélérez votre marche dans le jeu. Après le dernier envoi, vérifiez vos ratios de troupes.',
  ginPh:'Nom en jeu', nameNeeded:'Saisissez votre nom en jeu', ctlYou:'Vous avez le contrôle', ctlView:'Lecture seule · {n} a le contrôle', ctlNone:'Personne n’a encore le contrôle', adminsHere:'Admins présents', reqBtn:'Demander le contrôle', reqSent:'Demande envoyée', reqQueue:'Position {p} dans la file', reqCancel:'Annuler', reqRow:'{n} demande le contrôle', xferBtn:'Transférer', declBtn:'Refuser', ctlGained:'Vous avez maintenant le contrôle', ctlLost:'Le contrôle est passé à {n}', ctlDeclined:'Votre demande a été refusée', ctlExpired:'Votre demande a expiré', ctlNoReq:'Cette demande n’existe plus', viewNote:'Seul l’admin qui a le contrôle peut modifier ces réglages. Vous pouvez quand même utiliser la case CHEF ou REJOINDRE.',
  emailPh:'E-mail admin', badLogin:'E-mail ou mot de passe incorrect', errEmailOff:'Activez la connexion par e-mail/mot de passe dans Firebase Authentication.',
  back:'◂', language:'Langue', live:'En ligne', offline:'Hors ligne', connecting:'Connexion…', room:'Salle', clockPill:'horloge ±{n} ms', clockNone:'horloge --',
@@ -82,6 +84,7 @@ fr: {
  resetDef:'RÉINITIALISER LA DÉFENSE', resetDefConfirm:'Réinitialiser la défense ? Cela efface toutes les attaques et la barre de synchro. Les ennemis connus sont conservés.', forgetAll:'Tout oublier', forgetAllConfirm:'Oublier tous les ennemis connus ?', forgetOne:'Oublier {n}'
 },
 es: {
+ tutBtn:'Tutorial', tutNote:'Solo práctica. No se envía nada a tu equipo.', tutMenu:'Elige una práctica', tutLeadBtn:'Líder de rally', tutJoinBtn:'Participante', tutDefBtn:'Defensa', tutStepN:'Paso {n} de {m}', tutNext:'Siguiente', tutExit:'Salir del tutorial', tutOpen:'Listo: abrir la superposición', tutCont:'Continuar', tutAgain:'Practicar de nuevo', tutToMenu:'Menú', tutSound:'Activar sonido', tutAdmin:'Cierra la sesión de admin antes de empezar el tutorial.', tutTeam:'Envíos del equipo', tutSwitch:'Cambia a tu juego', tutStartIn:'empieza enseguida', tutRetLbl:'¡Bien hecho!', tutRetTime:'VUELVE', tutRetSub:'vuelve al tutorial', tutRetSay:'Bien hecho. Vuelve al tutorial.', sL1:'Eres el líder de rally VX. Dos compañeros, AB y KT, son simulados. El tutorial hace de admin.', sL2:'Toca LÍDER en el cuadro de abajo.', sL3:'Tu símbolo y tu tiempo de marcha ya están rellenados (VX, 0:50). Compruébalos y toca OK.', sL4:'ESPERA: el admin aún no ha confirmado a los líderes. Toca Siguiente para que confirme.', sL5:'EN ESPERA: los líderes están bloqueados. Toca Siguiente para iniciar la comprobación.', sL6:'¡Comprobación! Toca el botón verde LISTO en el cuadro de abajo.', sL7:'Todos están listos. El admin inicia la cuenta atrás. Toca el botón, cambia a tu juego y mira la ventana flotante.', sRun:'Cambia a tu juego ahora. La ventana flotante cuenta 3, 2, 1, luego muestra tu temporizador de lanzamiento y parpadea ENVÍA. Te avisará cuándo volver. Si no se abre, mira el cuadro de abajo.', sL9:'Ese fue un rally completo. AB lanzó primero para que todos los rallies impacten juntos. En el móvil, toca LISTO dentro de la app antes de abrir la superposición.', sJ1:'Eres participante. Cuatro líderes (AB, KT, QZ, VX) son simulados. El tutorial hace de admin y de líderes.', sJ2:'Toca UNIRSE en el cuadro de abajo.', sJ3:'ESPERA: el admin aún no ha confirmado a los líderes. Toca Siguiente para que confirme.', sJ4:'Elige tu rally: toca el símbolo del líder al que te unes.', sJ5:'Introduce tu tiempo de marcha (rellenado 0:41) y toca OK.', sJ6:'EN ESPERA: nada que tocar. Toca Siguiente para iniciar la comprobación.', sJ7:'La cuenta atrás va a empezar. Toca el botón, cambia a tu juego y mira. Cuando tu líder lance, la ventana se pone verde: RALLY INICIADO, ¡ÚNETE YA!', sJ9:'Bien hecho. Cuando veas RALLY INICIADO, únete a ese rally en el juego.', sD1:'El mismo equipo (AB, KT, QZ, VX) defiende contigo. El admin cambió al modo Defensa.', sD2:'Escribe tu marcha al centro, 0:36, y toca OK.', sD3:'Viene un ataque. Todos envían para que los refuerzos lleguen 0,4 s después del impacto. Toca el botón, cambia a tu juego y envía cuando el temporizador llegue a cero.', sD6:'Ahora llegan tres ataques muy seguidos. El número pequeño indica cuántos envíos te quedan. Un brillo rojo significa que dos ataques llegan con menos de 1 segundo de diferencia, así que envías dos veces casi a la vez. Cada temporizador se sustituye solo por el siguiente.', sD9:'Ya sabes defender. Si empiezas tarde, acelera tu marcha en el juego. Tras el último envío, revisa las proporciones de tropas.',
  ginPh:'Nombre en el juego', nameNeeded:'Introduce tu nombre en el juego', ctlYou:'Tienes el control', ctlView:'Solo lectura · {n} tiene el control', ctlNone:'Nadie tiene el control todavía', adminsHere:'Admins presentes', reqBtn:'Pedir el control', reqSent:'Solicitud enviada', reqQueue:'Puesto {p} en la cola', reqCancel:'Cancelar', reqRow:'{n} pide el control', xferBtn:'Transferir', declBtn:'Rechazar', ctlGained:'Ahora tienes el control', ctlLost:'El control pasó a {n}', ctlDeclined:'Tu solicitud fue rechazada', ctlExpired:'Tu solicitud caducó', ctlNoReq:'Esa solicitud ya no existe', viewNote:'Solo el admin con el control puede cambiar esto. Aún puedes usar la casilla LÍDER o UNIRSE.',
  emailPh:'Correo del admin', badLogin:'Correo o contraseña incorrectos', errEmailOff:'Activa el inicio de sesión con correo y contraseña en Firebase Authentication.',
  back:'◂', language:'Idioma', live:'En línea', offline:'Sin conexión', connecting:'Conectando…', room:'Sala', clockPill:'reloj ±{n} ms', clockNone:'reloj --',
@@ -113,6 +116,7 @@ es: {
  resetDef:'REINICIAR DEFENSA', resetDefConfirm:'¿Reiniciar la defensa? Se borran todos los ataques y la barra de sincronización. Se conservan los enemigos conocidos.', forgetAll:'Olvidar todos', forgetAllConfirm:'¿Olvidar todos los enemigos conocidos?', forgetOne:'Olvidar {n}'
 },
 ar: {
+ tutBtn:'الدليل التعليمي', tutNote:'تدريب فقط. لا يُرسل شيء إلى فريقك.', tutMenu:'اختر تدريباً', tutLeadBtn:'قائد التجمع', tutJoinBtn:'منضم', tutDefBtn:'الدفاع', tutStepN:'الخطوة {n} من {m}', tutNext:'التالي', tutExit:'إنهاء الدليل', tutOpen:'جاهز: افتح النافذة العائمة', tutCont:'متابعة', tutAgain:'تدرّب مرة أخرى', tutToMenu:'القائمة', tutSound:'تفعيل الصوت', tutAdmin:'سجّل الخروج من وضع المسؤول قبل بدء الدليل.', tutTeam:'إرسال الفريق', tutSwitch:'انتقل إلى لعبتك', tutStartIn:'يبدأ قريباً', tutRetLbl:'أحسنت!', tutRetTime:'عُد', tutRetSub:'عُد إلى الدليل', tutRetSay:'أحسنت. عُد إلى الدليل.', sL1:'أنت قائد التجمع VX. زميلان، AB وKT، يتم تمثيلهما تلقائياً. الدليل يؤدي دور المسؤول.', sL2:'اضغط قائد في المربع أدناه.', sL3:'تم ملء الرمز ووقت المسير مسبقاً (VX، 0:50). تحقق منهما واضغط موافق.', sL4:'انتظر: لم يؤكد المسؤول القادة بعد. اضغط التالي ليؤكد المسؤول.', sL5:'استعداد: تم تثبيت القادة. اضغط التالي لبدء فحص الجاهزية.', sL6:'فحص الجاهزية! اضغط زر جاهز الأخضر في المربع أدناه.', sL7:'الجميع جاهزون. سيبدأ المسؤول العد التنازلي الآن. اضغط الزر، ثم انتقل إلى لعبتك وراقب النافذة العائمة.', sRun:'انتقل إلى لعبتك الآن. تعد النافذة العائمة 3 و2 و1، ثم تعرض مؤقت انطلاقك وتومض بكلمة أرسل. ستخبرك متى تعود. إذا لم تفتح، راقب المربع أدناه.', sL9:'كان ذلك تجمعاً كاملاً. انطلق AB أولاً لتصل كل التجمعات معاً. على الهاتف، اضغط جاهز داخل التطبيق قبل فتح النافذة العائمة.', sJ1:'أنت منضم إلى التجمع. أربعة قادة (AB وKT وQZ وVX) يتم تمثيلهم تلقائياً. الدليل يؤدي دور المسؤول والقادة.', sJ2:'اضغط انضمام في المربع أدناه.', sJ3:'انتظر: لم يؤكد المسؤول القادة بعد. اضغط التالي ليؤكد المسؤول.', sJ4:'اختر تجمعك: اضغط رمز القائد الذي ستنضم إليه.', sJ5:'أدخل وقت مسيرك (معبأ مسبقاً 0:41) واضغط موافق.', sJ6:'استعداد: لا شيء للضغط عليه. اضغط التالي لبدء فحص الجاهزية.', sJ7:'سيبدأ العد التنازلي. اضغط الزر وانتقل إلى لعبتك وراقب. عندما ينطلق قائدك تتحول النافذة إلى الأخضر: بدأ التجمع، انضم الآن.', sJ9:'أحسنت. عندما ترى بدأ التجمع، انضم إلى ذلك التجمع في اللعبة.', sD1:'الفريق نفسه (AB وKT وQZ وVX) يدافع معك. حوّل المسؤول إلى وضع الدفاع.', sD2:'اكتب وقت مسيرك إلى المركز، 0:36، واضغط موافق.', sD3:'يقترب هجوم واحد. يرسل الجميع لتصل التعزيزات بعد الضربة بـ 0.4 ثانية. اضغط الزر وانتقل إلى لعبتك وأرسل عندما يصل المؤقت إلى الصفر.', sD6:'الآن تصل ثلاث هجمات متقاربة. الرقم الصغير هو عدد مرات الإرسال المتبقية لك. التوهج الأحمر يعني أن هجومين يصلان خلال ثانية من بعضهما، فترسل مرتين تقريباً في الوقت نفسه. يحل كل مؤقت محل السابق تلقائياً.', sD9:'أصبحت قادراً على الدفاع. إذا بدأت متأخراً فسرّع مسيرك في اللعبة. بعد آخر إرسال راجع نسب القوات.',
  ginPh:'الاسم داخل اللعبة', nameNeeded:'أدخل اسمك داخل اللعبة', ctlYou:'لديك التحكم', ctlView:'للعرض فقط · {n} لديه التحكم', ctlNone:'لا أحد لديه التحكم بعد', adminsHere:'المسؤولون الحاضرون', reqBtn:'طلب التحكم', reqSent:'تم إرسال الطلب', reqQueue:'الترتيب {p} في الانتظار', reqCancel:'إلغاء', reqRow:'{n} يطلب التحكم', xferBtn:'نقل التحكم', declBtn:'رفض', ctlGained:'أصبح لديك التحكم الآن', ctlLost:'انتقل التحكم إلى {n}', ctlDeclined:'تم رفض طلبك', ctlExpired:'انتهت صلاحية طلبك', ctlNoReq:'هذا الطلب لم يعد موجوداً', viewNote:'يمكن فقط للمسؤول الذي لديه التحكم تغيير هذه الإعدادات. ما زال بإمكانك استخدام مربع قائد أو انضمام.',
  emailPh:'البريد الإلكتروني للمسؤول', badLogin:'البريد الإلكتروني أو كلمة المرور غير صحيحة', errEmailOff:'فعّل تسجيل الدخول بالبريد وكلمة المرور في Firebase Authentication.',
  back:'▸', language:'اللغة', live:'متصل', offline:'غير متصل', connecting:'جارٍ الاتصال…', room:'الغرفة', clockPill:'الساعة ±{n} مللي ث', clockNone:'الساعة --',
@@ -144,6 +148,7 @@ ar: {
  resetDef:'إعادة ضبط الدفاع', resetDefConfirm:'إعادة ضبط الدفاع؟ سيُمسح كل الهجمات وشريط المزامنة. يبقى الأعداء المعروفون.', forgetAll:'نسيان الكل', forgetAllConfirm:'هل تريد نسيان كل الأعداء المعروفين؟', forgetOne:'نسيان {n}'
 },
 ko: {
+ tutBtn:'튜토리얼', tutNote:'연습용입니다. 팀에는 아무것도 전송되지 않습니다.', tutMenu:'연습을 선택하세요', tutLeadBtn:'집결 리더', tutJoinBtn:'집결 참가자', tutDefBtn:'방어', tutStepN:'{m}단계 중 {n}단계', tutNext:'다음', tutExit:'튜토리얼 종료', tutOpen:'준비 완료: 오버레이 띄우기', tutCont:'계속', tutAgain:'다시 연습', tutToMenu:'메뉴', tutSound:'소리 켜기', tutAdmin:'튜토리얼을 시작하기 전에 관리자에서 로그아웃하세요.', tutTeam:'팀 출발', tutSwitch:'게임으로 이동하세요', tutStartIn:'곧 시작합니다', tutRetLbl:'잘했어요!', tutRetTime:'돌아가기', tutRetSub:'튜토리얼로 돌아오세요', tutRetSay:'잘했습니다. 튜토리얼로 돌아오세요.', sL1:'당신은 집결 리더 VX입니다. 팀원 AB와 KT는 가상으로 진행됩니다. 튜토리얼이 관리자 역할을 합니다.', sL2:'아래 상자에서 리더를 누르세요.', sL3:'기호와 행군 시간이 미리 입력되어 있습니다 (VX, 0:50). 확인하고 확인을 누르세요.', sL4:'대기: 관리자가 아직 리더를 확정하지 않았습니다. 다음을 눌러 확정하게 하세요.', sL5:'대기 중: 리더가 확정되었습니다. 다음을 눌러 준비 확인을 시작하세요.', sL6:'준비 확인! 아래 상자의 초록색 준비 버튼을 누르세요.', sL7:'모두 준비되었습니다. 이제 관리자가 카운트다운을 시작합니다. 버튼을 누르고 게임으로 이동해 떠 있는 창을 보세요.', sRun:'지금 게임으로 이동하세요. 떠 있는 창이 3, 2, 1을 센 뒤 출발 타이머를 보여 주고 출발!이 깜빡입니다. 돌아올 때를 알려 줍니다. 창이 열리지 않으면 아래 상자를 보세요.', sL9:'집결 한 번을 모두 해 보았습니다. AB가 먼저 출발해서 모든 집결이 함께 도착합니다. 휴대폰에서는 오버레이를 띄우기 전에 앱에서 준비를 누르세요.', sJ1:'당신은 집결 참가자입니다. 리더 4명(AB, KT, QZ, VX)은 가상으로 진행됩니다. 튜토리얼이 관리자와 리더 역할을 합니다.', sJ2:'아래 상자에서 참가를 누르세요.', sJ3:'대기: 관리자가 아직 리더를 확정하지 않았습니다. 다음을 눌러 확정하게 하세요.', sJ4:'집결을 선택하세요: 참가할 리더의 기호를 누르세요.', sJ5:'행군 시간을 입력하고 (미리 입력됨 0:41) 확인을 누르세요.', sJ6:'대기 중: 누를 것이 없습니다. 다음을 눌러 준비 확인을 시작하세요.', sJ7:'곧 카운트다운이 시작됩니다. 버튼을 누르고 게임으로 이동해 지켜보세요. 리더가 출발하면 창이 초록색으로 바뀝니다: 집결 시작, 지금 참가!', sJ9:'잘했습니다. 집결 시작이 보이면 게임에서 그 집결에 참가하세요.', sD1:'같은 팀(AB, KT, QZ, VX)이 함께 방어합니다. 관리자가 방어 모드로 전환했습니다.', sD2:'중심까지의 행군 시간 0:36을 입력하고 확인을 누르세요.', sD3:'공격 하나가 옵니다. 모두 보내서 지원군이 타격 0.4초 뒤에 도착하게 합니다. 버튼을 누르고 게임으로 이동해 타이머가 0이 되면 보내세요.', sD6:'이제 공격 세 개가 연달아 옵니다. 작은 숫자는 남은 출발 횟수입니다. 붉은 빛은 두 공격이 1초 이내 간격으로 온다는 뜻이며, 거의 동시에 두 번 보내야 합니다. 각 타이머는 다음 타이머로 자동 교체됩니다.', sD9:'이제 방어할 수 있습니다. 늦게 출발했다면 게임에서 행군을 가속하세요. 마지막 출발 후에는 병력 비율을 확인하세요.',
  ginPh:'게임 내 이름', nameNeeded:'게임 내 이름을 입력하세요', ctlYou:'제어권이 있습니다', ctlView:'보기 전용 · {n}님이 제어 중', ctlNone:'아직 제어권을 가진 사람이 없습니다', adminsHere:'접속 중인 관리자', reqBtn:'제어권 요청', reqSent:'요청을 보냈습니다', reqQueue:'대기 {p}번째', reqCancel:'취소', reqRow:'{n}님이 제어권을 요청함', xferBtn:'넘기기', declBtn:'거절', ctlGained:'이제 제어권이 있습니다', ctlLost:'제어권이 {n}님에게 넘어갔습니다', ctlDeclined:'요청이 거절되었습니다', ctlExpired:'요청이 만료되었습니다', ctlNoReq:'해당 요청이 더 이상 없습니다', viewNote:'제어권이 있는 관리자만 변경할 수 있습니다. 리더 또는 참가 상자는 계속 사용할 수 있습니다.',
  emailPh:'관리자 이메일', badLogin:'이메일 또는 비밀번호가 틀렸습니다', errEmailOff:'Firebase Authentication에서 이메일/비밀번호 로그인을 켜세요.',
  back:'◂', language:'언어', live:'연결됨', offline:'오프라인', connecting:'연결 중…', room:'방', clockPill:'시계 ±{n}ms', clockNone:'시계 --',
@@ -175,6 +180,7 @@ ko: {
  resetDef:'방어 초기화', resetDefConfirm:'방어를 초기화할까요? 모든 공격과 동기화 입력이 지워집니다. 알려진 적은 유지됩니다.', forgetAll:'모두 잊기', forgetAllConfirm:'알려진 적을 모두 잊을까요?', forgetOne:'{n} 잊기'
 },
 ja: {
+ tutBtn:'チュートリアル', tutNote:'練習用です。チームには何も送信されません。', tutMenu:'練習を選んでください', tutLeadBtn:'集結リーダー', tutJoinBtn:'集結参加者', tutDefBtn:'防衛', tutStepN:'ステップ {n}/{m}', tutNext:'次へ', tutExit:'チュートリアルを終了', tutOpen:'準備OK: オーバーレイを表示', tutCont:'続ける', tutAgain:'もう一度練習', tutToMenu:'メニュー', tutSound:'サウンドをオン', tutAdmin:'チュートリアルを始める前に管理者からログアウトしてください。', tutTeam:'チームの出発', tutSwitch:'ゲームに切り替えて', tutStartIn:'まもなく開始', tutRetLbl:'よくできました！', tutRetTime:'戻る', tutRetSub:'チュートリアルに戻ってください', tutRetSay:'よくできました。チュートリアルに戻ってください。', sL1:'あなたは集結リーダーVXです。仲間のABとKTは自動で動きます。チュートリアルが管理者役を務めます。', sL2:'下のボックスで「リーダー」をタップしてください。', sL3:'記号と行軍時間は入力済みです (VX, 0:50)。確認してOKをタップしてください。', sL4:'待機: 管理者がまだリーダーを確定していません。「次へ」をタップして確定させましょう。', sL5:'待機中: リーダーが確定しました。「次へ」をタップして準備確認を始めます。', sL6:'準備確認です！下のボックスの緑の「準備OK」ボタンをタップしてください。', sL7:'全員の準備ができました。次に管理者がカウントダウンを始めます。ボタンをタップし、ゲームに切り替えて浮かぶウィンドウを見てください。', sRun:'今すぐゲームに切り替えてください。浮かぶウィンドウが3、2、1と数え、出発タイマーを表示して「出発！」と点滅します。戻るタイミングも知らせます。開かない場合は下のボックスを見てください。', sL9:'集結を一通り体験しました。ABが先に出発したので、すべての集結が同時に着弾します。スマホではオーバーレイを開く前にアプリで「準備OK」をタップしてください。', sJ1:'あなたは集結参加者です。リーダー4人 (AB, KT, QZ, VX) は自動で動きます。チュートリアルが管理者とリーダー役を務めます。', sJ2:'下のボックスで「参加」をタップしてください。', sJ3:'待機: 管理者がまだリーダーを確定していません。「次へ」をタップして確定させましょう。', sJ4:'集結を選びます。参加するリーダーの記号をタップしてください。', sJ5:'行軍時間を入力し (入力済み 0:41)、OKをタップしてください。', sJ6:'待機中: タップするものはありません。「次へ」をタップして準備確認を始めます。', sJ7:'まもなくカウントダウンが始まります。ボタンをタップし、ゲームに切り替えて見ていてください。リーダーが出発するとウィンドウが緑になります: 集結開始、今すぐ参加！', sJ9:'よくできました。「集結開始」が表示されたら、ゲームでその集結に参加してください。', sD1:'同じチーム (AB, KT, QZ, VX) が一緒に防衛します。管理者が防衛モードに切り替えました。', sD2:'中心までの行軍時間 0:36 を入力し、OKをタップしてください。', sD3:'攻撃が1件来ます。全員が出発し、援軍が着弾の0.4秒後に到着するようにします。ボタンをタップし、ゲームに切り替えて、タイマーが0になったら出発してください。', sD6:'今度は3件の攻撃が立て続けに来ます。小さな数字は残りの出発回数です。赤い光は、2件の攻撃が1秒以内の間隔で着弾するという意味で、ほぼ同時に2回出発させます。タイマーは自動で次のものに切り替わります。', sD9:'これで防衛できます。出発が遅れたら、ゲーム内で行軍を加速してください。最後の出発後は兵力の比率を確認しましょう。',
  ginPh:'ゲーム内の名前', nameNeeded:'ゲーム内の名前を入力してください', ctlYou:'操作権があります', ctlView:'閲覧のみ · {n}さんが操作中', ctlNone:'まだ操作権を持つ人がいません', adminsHere:'参加中の管理者', reqBtn:'操作権をリクエスト', reqSent:'リクエストを送信しました', reqQueue:'順番 {p}番目', reqCancel:'キャンセル', reqRow:'{n}さんが操作権を求めています', xferBtn:'譲渡', declBtn:'拒否', ctlGained:'操作権を取得しました', ctlLost:'操作権が{n}さんに移りました', ctlDeclined:'リクエストは拒否されました', ctlExpired:'リクエストの期限が切れました', ctlNoReq:'そのリクエストはもうありません', viewNote:'操作権を持つ管理者だけが変更できます。リーダーまたは参加のボックスは引き続き使えます。',
  emailPh:'管理者メール', badLogin:'メールまたはパスワードが違います', errEmailOff:'Firebase Authenticationでメール/パスワードログインを有効にしてください。',
  back:'◂', language:'言語', live:'接続中', offline:'オフライン', connecting:'接続しています…', room:'ルーム', clockPill:'時計 ±{n}ms', clockNone:'時計 --',
@@ -292,7 +298,7 @@ const adminSec = $('adminSec');
 /* ---------- local profile ---------- */
 let prof = { role: null, sym: '', march: null, dmarch: null };
 try { Object.assign(prof, JSON.parse(localStorage.getItem('tacsync_prof') || '{}')); } catch (e) {}
-const saveProf = () => { try { localStorage.setItem('tacsync_prof', JSON.stringify(prof)); } catch (e) {} };
+const saveProf = () => { if (TUT.on) return; try { localStorage.setItem('tacsync_prof', JSON.stringify(prof)); } catch (e) {} };
 let roomKey = 'R' + ((localStorage.getItem('tacsync_room') || '261').replace(/[^A-Za-z0-9_-]/g, '').toUpperCase() || '261');
 $('room').value = roomKey.slice(1);
 
@@ -305,6 +311,9 @@ let lastMode = null, modeBannerUntil = 0, lastKey = null;
 const ui = { editing: false, pendingRally: null, editD: false };
 const bar = { phase: 'rally', editId: null };
 let soundOn = false, actx = null; const fired = new Set();
+const TUT = { on: false, kind: null, step: 0, steps: [], over: null, timers: [], realD: null, realUid: null, realProf: null, returnShown: false, run: 0, advancing: false };
+const TDEL = { tutDelete: true };
+const DEL = () => (TUT.on ? TDEL : deleteField());
 const now = () => Date.now() + offset;
 const roomRef = () => doc(db, 'rooms', roomKey);
 
@@ -315,7 +324,7 @@ function fail(e){
   else if (c.includes('operation-not-allowed') || c.includes('admin-restricted')) note(tr('errAuth'), true);
   else note(tr('errGeneric', { m: e && e.message ? e.message : e }), true);
 }
-const upd = obj => updateDoc(roomRef(), obj).catch(fail);
+const upd = obj => (TUT.on ? tutApply(obj) : updateDoc(roomRef(), obj).catch(fail));
 
 /* ---------- language ---------- */
 function refreshStatic(){
@@ -340,6 +349,7 @@ $('lang').onchange = e => {
   applyLang(); invalidate();
   if (isAdmin){ adminSec.innerHTML = skel(); renderAdmin(); }
   else if (adminSec.querySelector('#pw')) loginForm();
+  if (TUT.on) tutRender();
   tick();
 };
 
@@ -379,7 +389,7 @@ function offsetsFor(L){
 
 /* ---------- clock sync ---------- */
 async function syncClock(){
-  if (!db || !uid) return;
+  if (!db || !uid || TUT.on) return;
   const r = doc(db, 'clocks', uid); let best = null;
   for (let i = 0; i < 5; i++){
     try {
@@ -480,7 +490,7 @@ function defenseView(t){
   const list = launchList((D.def && D.def.waves) || [], mar), st = defState(list, t);
   if (st.kind === 'count'){
     const it = st.item, nx = st.nextGap != null ? tr('thenGap', { s: st.nextGap.toFixed(1) }) : '';
-    return V('dc', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: (it.urgent || st.rem < 3000) ? 'warn' : 'run', label: tr('sendIn', { l: it.label }), time: fmtCount(st.rem), sub: esc(it.name) + nx, cnt: st.left, rem: st.rem });
+    return V('dc', { cid: 'D' + it.id + ':' + Math.round(it.L), cls: (it.urgent || (st.nextGap != null && st.nextGap <= 1) || st.rem < 3000) ? 'warn' : 'run', label: tr('sendIn', { l: it.label }), time: fmtCount(st.rem), sub: esc(it.name) + nx, cnt: st.left, rem: st.rem });
   }
   if (st.kind === 'send'){
     const it = st.item;
@@ -491,6 +501,7 @@ function defenseView(t){
 }
 
 function viewNow(){
+  if (TUT.on && TUT.over){ const o = TUT.over(); if (o) return o; }
   if (Date.now() < modeBannerUntil && D) return V('mode', { cls: 'warn', label: tr('modeChange'), time: D.mode === 'defense' ? tr('modeDef') : tr('modeAtk') });
   if (!D) return V('conn', { label: live ? '' : tr('connecting'), time: '…' });
   return D.mode === 'defense' ? defenseView(now()) : attackView(now());
@@ -535,6 +546,7 @@ function tick(){
   if (v.rem != null){ const s = Math.ceil(v.rem / 1000); if (s >= 1 && s <= 3) cue(v.cid + ':' + s, 660, 120, String(s), [60]); }
   if (v.go) cue(v.cid + ':go', 990, 400, v.say || tr('say_send'), [150, 60, 150]);
   draw(v);
+  if (TUT.on) tutTick();
   tickMe(); tickAdmin();
   if (D && D.mode === 'attack' && D.attack.stage !== 'ready') starting = false;
 }
@@ -568,7 +580,7 @@ box.addEventListener('click', e => {
     prof.march = m; saveProf();
     upd({ ['players.' + uid]: myEntry({ role: 'join', march: m, rally: ui.pendingRally }) }); ui.pendingRally = null;
   }
-  else if (act === 'join-change'){ upd({ ['players.' + uid + '.rally']: deleteField() }); }
+  else if (act === 'join-change'){ upd({ ['players.' + uid + '.rally']: DEL() }); }
   else if (act === 'def-ok'){
     const m = parseMS(q('#inMar').value); if (!m || m < 1) return err(tr('marErr'));
     prof.dmarch = m; saveProf(); ui.editD = false;
@@ -601,7 +613,7 @@ $('resetMe').onclick = () => {
   if (!confirm(tr('resetConfirm'))) return;
   prof = { role: null, sym: '', march: null, dmarch: null }; saveProf();
   ui.editing = false; ui.pendingRally = null; ui.editD = false;
-  if (D && D.players && D.players[uid]) upd({ ['players.' + uid]: deleteField() });
+  if (D && D.players && D.players[uid]) upd({ ['players.' + uid]: DEL() });
   invalidate(); tick();
 };
 
@@ -971,14 +983,17 @@ function onDoc(){
   tick();
 }
 function subscribe(){
-  if (unsub) unsub(); D = null; live = false; lastMode = null; invalidate();
+  if (unsub) unsub(); if (TUT.on) TUT.realD = null; else { D = null; lastMode = null; } live = false; invalidate();
   ensureRoom().catch(fail);
   unsub = onSnapshot(roomRef(), s => {
     if (!s.exists()){ ensureRoom().catch(fail); return; }
-    D = s.data(); live = true; netState = 'live'; refreshStatic(); onDoc();
+    live = true; netState = 'live'; refreshStatic();
+    if (TUT.on){ TUT.realD = s.data(); return; }
+    D = s.data(); onDoc();
   }, e => { live = false; netState = 'off'; refreshStatic(); fail(e); });
 }
 $('room').onchange = async e => {
+  if (TUT.on){ e.target.value = roomKey.slice(1); return; }
   const v = e.target.value.replace(/[^A-Za-z0-9_-]/g, '').toUpperCase() || '261';
   const wasAdmin = isAdmin, nm = adminName;
   if (wasAdmin) await leaveCtl();
@@ -990,7 +1005,7 @@ $('room').onchange = async e => {
 /* ---------- pop-out, wake lock ---------- */
 function primeVideo(){ try { tick(); if (!vid.srcObject) vid.srcObject = cv.captureStream(10); vid.play().catch(() => {}); } catch (e) {} }
 primeVideo(); document.addEventListener('pointerdown', primeVideo, { once: true });
-$('pop').onclick = () => {
+function openPop(){
   if ('documentPictureInPicture' in window){
     documentPictureInPicture.requestWindow({ width: 320, height: 210 }).then(pw => {
       const st = pw.document.createElement('style');
@@ -1012,7 +1027,8 @@ $('pop').onclick = () => {
     } else if (vid.webkitSetPresentationMode) vid.webkitSetPresentationMode('picture-in-picture');
     else note(tr('notePopNone'));
   } catch (e) { note(tr('notePopTap', { m: e.message })); }
-};
+}
+$('pop').onclick = openPop;
 $('wake').onclick = async () => {
   if (!('wakeLock' in navigator)) return note(tr('noteWakeNo'));
   try { wake = await navigator.wakeLock.request('screen'); refreshStatic(); wake.addEventListener('release', refreshStatic); }
@@ -1022,6 +1038,207 @@ document.addEventListener('visibilitychange', async () => {
   if (wake && wake.released && document.visibilityState === 'visible'){ try { wake = await navigator.wakeLock.request('screen'); refreshStatic(); } catch (e) {} }
 });
 
+/* ---------- tutorial (practice mode) ----------
+   Runs on a pretend room that lives only in this page. Nothing is sent to Firebase.
+   The real room keeps updating in the background and is put back when the tutorial closes. */
+const CAST = [{ u: 't1', sym: 'AB', march: 52, dm: 44 }, { u: 't2', sym: 'KT', march: 48, dm: 40 }, { u: 't3', sym: 'QZ', march: 45, dm: 38 }, { u: 't4', sym: 'VX', march: 50, dm: 42 }];
+const tutPanel = document.createElement('section');
+tutPanel.id = 'tut'; tutPanel.className = 'card'; tutPanel.hidden = true; tutPanel.setAttribute('aria-live', 'polite');
+$('boxSlot').before(tutPanel);
+const tutBtn = document.createElement('button');
+tutBtn.id = 'tutBtn'; tutBtn.className = 'link'; tutBtn.dataset.i = 'tutBtn';
+$('adminBtn').before(tutBtn);
+const tutStyle = document.createElement('style');
+tutStyle.textContent = '.tutx{font-size:14px;line-height:1.5;margin:6px 0}#boxSlot.hl .box{outline:3px dashed #7aa7ff;outline-offset:3px}#tutTeam{font-size:12px;color:var(--mu);margin-top:4px;unicode-bidi:plaintext}';
+document.head.append(tutStyle);
+
+function tutDoc(kind){
+  const d = initialDoc(), t0 = Date.now(), n = kind === 'lead' ? 2 : 4;
+  d.players = {};
+  CAST.slice(0, n).forEach((c, i) => { d.players[c.u] = { role: 'lead', sym: c.sym, march: c.march, ep: 0, t: t0 + i, ready: false }; });
+  return d;
+}
+function tutApply(obj){
+  Object.keys(obj).forEach(k => {
+    const parts = k.split('.'); let o = D;
+    for (let i = 0; i < parts.length - 1; i++){
+      if (o[parts[i]] == null || typeof o[parts[i]] !== 'object') o[parts[i]] = {};
+      o = o[parts[i]];
+    }
+    const v = obj[k], last = parts[parts.length - 1];
+    if (v === TDEL) delete o[last]; else o[last] = (v && typeof v === 'object') ? JSON.parse(JSON.stringify(v)) : v;
+  });
+  invalidate(); tick(); return Promise.resolve();
+}
+function tutReadyCheck(){
+  const u = { 'attack.stage': 'ready', 'attack.plan': null };
+  leadersNow().forEach(l => { u['players.' + l.uid + '.ready'] = false; });
+  tutApply(u);
+  CAST.forEach((c, i) => {
+    if (!D.players[c.u]) return;
+    TUT.timers.push(setTimeout(() => { if (TUT.on && D.players[c.u]) tutApply({ ['players.' + c.u + '.ready']: true }); }, 1200 + i * 1300));
+  });
+}
+function tutReadyAll(){
+  const u = {};
+  CAST.forEach(c => { if (D.players[c.u]) u['players.' + c.u + '.ready'] = true; });
+  tutApply(u);
+}
+function tutWaves(n){
+  const mar = prof.dmarch != null ? prof.dmarch : prof.march, L1 = now() + 10000, base = L1 + mar * 1000 - 400, id = 'tw' + TUT.run + '_' + Date.now() + '_';
+  const defs = [['ARES', 0], ['ZED', 800], ['NOX', 6800]].slice(0, n);
+  tutApply({ 'def.waves': defs.map((d, i) => ({ id: id + i, name: d[0], march: 30, rallyEnd: null, landAt: Math.round(base + d[1]), off: 0.4 })) });
+}
+function tutLastL(){
+  const mar = prof.dmarch != null ? prof.dmarch : prof.march, l = launchList(D.def.waves, mar);
+  return l[l.length - 1].L + 5000;
+}
+function tutEndAt(getMs){ TUT.timers.push(setTimeout(tutShowReturn, Math.max(500, getMs() - now()))); }
+function tutShowReturn(){
+  if (!TUT.on) return;
+  TUT.returnShown = true; const id = 'TR' + Date.now();
+  TUT.over = () => V('tr', { cid: id, cls: 'go', label: tr('tutRetLbl'), time: tr('tutRetTime'), sub: tr('tutRetSub'), go: true, say: tr('tutRetSay') });
+  tutRender();
+}
+/* The player taps "ready", the pop-out opens, they have 8 seconds to switch to the game, then it begins. */
+function tutLaunch(after){
+  tutAdvance();
+  openPop();
+  const end = Date.now() + 8000;
+  TUT.over = () => { const r = end - Date.now(); return r > 0 ? V('tl', { cls: 'run', label: tr('tutSwitch'), time: String(Math.ceil(r / 1000)), sub: tr('tutStartIn') }) : null; };
+  TUT.timers.push(setTimeout(() => { if (!TUT.on) return; TUT.over = null; after(); }, 8000));
+}
+function tutSteps(kind){
+  const run = { x: 'sRun', run: true };
+  if (kind === 'lead') return [
+    { x: 'sL1', snd: true, next: true },
+    { x: 'sL2', hl: true, wait: () => prof.role === 'lead' },
+    { x: 'sL3', hl: true, enter: () => { prof.sym = 'VX'; prof.march = 50; invalidate(); }, wait: () => { const m = D.players.me; return !!(m && m.ep === epoch()); } },
+    { x: 'sL4', next: true, go: () => tutApply({ 'attack.confirmed': true, 'attack.order': ['t1', 'me', 't2'] }) },
+    { x: 'sL5', next: true, go: () => tutReadyCheck() },
+    { x: 'sL6', hl: true, wait: () => !!(D.players.me && D.players.me.ready) },
+    { x: 'sL7', open: () => tutLaunch(() => { startCountdown(); tutEndAt(() => D.attack.plan.launch.me + 4000); }) },
+    run,
+    { x: 'sL9', end: true }
+  ];
+  if (kind === 'join') return [
+    { x: 'sJ1', snd: true, next: true },
+    { x: 'sJ2', hl: true, wait: () => prof.role === 'join' },
+    { x: 'sJ3', next: true, go: () => tutApply({ 'attack.confirmed': true, 'attack.order': ['t1', 't2', 't3', 't4'] }) },
+    { x: 'sJ4', hl: true, wait: () => !!ui.pendingRally || !!(D.players.me && D.players.me.rally) },
+    { x: 'sJ5', hl: true, enter: () => { prof.march = 41; invalidate(); }, wait: () => !!(D.players.me && D.players.me.rally), back: () => !ui.pendingRally && !(D.players.me && D.players.me.rally) },
+    { x: 'sJ6', next: true, go: () => tutReadyCheck() },
+    { x: 'sJ7', open: () => tutLaunch(() => { tutReadyAll(); startCountdown(); tutEndAt(() => D.attack.plan.launch[D.players.me.rally] + 7000); }) },
+    run,
+    { x: 'sJ9', end: true }
+  ];
+  return [
+    { x: 'sD1', snd: true, next: true, enter: () => { tutApply({ mode: 'defense' }); modeBannerUntil = Date.now() + 2000; beep(520, 200); } },
+    { x: 'sD2', hl: true, wait: () => prof.dmarch != null },
+    { x: 'sD3', open: () => tutLaunch(() => { tutWaves(1); tutEndAt(tutLastL); }) },
+    run,
+    { x: 'sD6', open: () => tutLaunch(() => { tutWaves(3); tutEndAt(tutLastL); }) },
+    run,
+    { x: 'sD9', end: true }
+  ];
+}
+function tutGo(i){
+  const s = TUT.steps[i]; if (!s) return tutMenu();
+  TUT.step = i; TUT.returnShown = false; TUT.over = null;
+  if (s.enter) s.enter();
+  $('boxSlot').classList.toggle('hl', !!s.hl);
+  tutRender(); invalidate(); tick();
+}
+function tutAdvance(){ tutGo(TUT.step + 1); }
+function tutClear(){
+  TUT.timers.forEach(clearTimeout); TUT.timers = []; TUT.over = null; TUT.returnShown = false; TUT.advancing = false;
+  $('boxSlot').classList.remove('hl'); modeBannerUntil = 0;
+}
+function tutStartKind(kind){
+  tutClear();
+  TUT.kind = kind; TUT.run++;
+  prof = { role: null, sym: '', march: null, dmarch: null };
+  ui.editing = false; ui.pendingRally = null; ui.editD = false;
+  D = tutDoc(kind);
+  TUT.steps = tutSteps(kind); TUT.step = -1;
+  tutGo(0);
+}
+function tutMenu(){
+  tutClear(); TUT.kind = null; TUT.steps = [];
+  prof = { role: null, sym: '', march: null, dmarch: null };
+  ui.editing = false; ui.pendingRally = null; ui.editD = false;
+  D = tutDoc('join');
+  TUT.over = () => V('tm', { label: tr('tutBtn'), time: '…', sub: tr('tutMenu') });
+  tutRender(); invalidate(); tick();
+}
+function tutExit(){
+  tutClear(); TUT.on = false; TUT.kind = null; TUT.steps = [];
+  D = TUT.realD; uid = TUT.realUid; prof = TUT.realProf;
+  ui.editing = false; ui.pendingRally = null; ui.editD = false;
+  $('adminBtn').hidden = false; tutBtn.hidden = false; $('resetMe').hidden = false;
+  tutPanel.hidden = true; lastMode = D ? D.mode : null; invalidate();
+  if (D) onDoc(); else tick();
+}
+function tutTeamText(){
+  const W = (D.def && D.def.waves) || []; if (!W.length) return '';
+  const t = now();
+  return tr('tutTeam') + ': ' + CAST.map(c => { const st = defState(launchList(W, c.dm), t); return c.sym + ' ' + (st.kind === 'count' ? fmtCount(st.rem) : st.kind === 'send' ? tr('send') : '✓'); }).join(' · ');
+}
+function tutRender(){
+  if (!TUT.on){ tutPanel.hidden = true; return; }
+  tutPanel.hidden = false;
+  let h = '<div class="mut">' + tr('tutNote') + '</div>';
+  if (!TUT.kind){
+    h += '<div class="tutx"><b>' + tr('tutMenu') + '</b></div><div class="row">' +
+      '<button data-t="start" data-k="lead">' + tr('tutLeadBtn') + '</button><button data-t="start" data-k="join">' + tr('tutJoinBtn') + '</button><button data-t="start" data-k="def">' + tr('tutDefBtn') + '</button>' +
+      '<button class="alt" data-t="exit">' + tr('tutExit') + '</button></div>';
+  } else {
+    const s = TUT.steps[TUT.step];
+    h += '<div class="mut">' + tr('tutStepN', { n: TUT.step + 1, m: TUT.steps.length }) + '</div><div class="tutx">' + tr(s.x) + '</div>';
+    if (TUT.kind === 'def' && (s.run || s.open)) h += '<div id="tutTeam"></div>';
+    h += '<div class="row">';
+    if (s.snd && !soundOn) h += '<button class="alt" data-t="sound">' + tr('tutSound') + '</button>';
+    if (s.next) h += '<button data-t="next">' + tr('tutNext') + '</button>';
+    if (s.open) h += '<button class="go" data-t="open">' + tr('tutOpen') + '</button>';
+    if (s.run) h += '<button data-t="cont" ' + (TUT.returnShown ? '' : 'disabled') + '>' + tr('tutCont') + '</button>';
+    if (s.end) h += '<button data-t="again">' + tr('tutAgain') + '</button><button class="alt" data-t="menu">' + tr('tutToMenu') + '</button>';
+    h += '<button class="alt" data-t="exit">' + tr('tutExit') + '</button></div>';
+  }
+  tutPanel.innerHTML = h;
+}
+function tutTick(){
+  if (!TUT.kind) return;
+  const s = TUT.steps[TUT.step];
+  if (s && !TUT.advancing){
+    if (s.wait && s.wait()){ TUT.advancing = true; setTimeout(() => { TUT.advancing = false; if (TUT.on && TUT.steps[TUT.step] === s) tutAdvance(); }, 450); }
+    else if (s.back && s.back()){ TUT.advancing = true; setTimeout(() => { TUT.advancing = false; if (TUT.on && TUT.steps[TUT.step] === s) tutGo(TUT.step - 1); }, 450); }
+  }
+  const el = $('tutTeam'); if (el) el.textContent = tutTeamText();
+}
+tutPanel.addEventListener('click', e => {
+  const b = e.target.closest('[data-t]'); if (!b || !TUT.on) return;
+  const a = b.dataset.t, s = TUT.steps[TUT.step];
+  if (a === 'start') tutStartKind(b.dataset.k);
+  else if (a === 'exit') tutExit();
+  else if (a === 'menu') tutMenu();
+  else if (a === 'again') tutStartKind(TUT.kind);
+  else if (a === 'sound'){ $('sound').click(); tutRender(); }
+  else if (a === 'next' && s){ if (s.go) s.go(); tutAdvance(); }
+  else if (a === 'open' && s && s.open) s.open();
+  else if (a === 'cont' && TUT.returnShown) tutAdvance();
+});
+tutBtn.onclick = () => {
+  if (TUT.on) return;
+  if (isAdmin){ note(tr('tutAdmin')); return; }
+  adminSec.hidden = true; adminSec.innerHTML = '';
+  TUT.on = true; TUT.realD = D; TUT.realUid = uid; TUT.realProf = prof;
+  uid = 'me';
+  $('adminBtn').hidden = true; tutBtn.hidden = true; $('resetMe').hidden = true;
+  tutMenu();
+};
+/* Back on the page after the pop-out told the player to return: move on to the next step. */
+document.addEventListener('visibilitychange', () => { if (TUT.on && TUT.returnShown && document.visibilityState === 'visible') tutAdvance(); });
+
 /* ---------- boot ---------- */
 (async function boot(){
   applyLang();
@@ -1030,13 +1247,13 @@ document.addEventListener('visibilitychange', async () => {
     app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
     await auth.authStateReady();
     if (!auth.currentUser) await signInAnonymously(auth);
-    uid = auth.currentUser.uid;
+    if (TUT.on) TUT.realUid = auth.currentUser.uid; else uid = auth.currentUser.uid;
   } catch (e){ netState = 'off'; refreshStatic(); fail(e); return; }
   await syncClock();
   refreshStatic();
   setInterval(syncClock, 60000);
   subscribe();
-  if (auth.currentUser && !auth.currentUser.isAnonymous){
+  if (auth.currentUser && !auth.currentUser.isAnonymous && !TUT.on){
     let nm = ''; try { nm = localStorage.getItem('tacsync_aname') || ''; } catch (e) {}
     if (nm) joinAdmin(nm); else loginForm();
   }
